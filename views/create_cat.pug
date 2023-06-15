@@ -1,0 +1,19 @@
+extends layout 
+
+block content 
+    h1 Create a new category
+
+    br
+
+    if errors
+        for err in errors
+            p(style="color: red")= err.msg
+
+    .general-form
+        form(action="" method="POST")
+
+            .cat-inp
+                label(for="name") Category Name
+                input(id='name' type="text" name="category" placeholder="category name...") 
+
+            button Create
