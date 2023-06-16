@@ -177,7 +177,7 @@ header h2 {
     margin-top: 3%;
 }
 
-.general-form .cat-inp {
+.inp {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
@@ -236,4 +236,10 @@ header h2 {
 /* When moving the mouse over the close button */
 .closebtn:hover {
     color: black;
+}
+
+.product-form form {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 5rem;
 }

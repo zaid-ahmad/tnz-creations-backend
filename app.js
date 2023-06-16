@@ -144,6 +144,15 @@ app.use(function (err, req, res, next) {
 module.exports = app
 
 /*
-    Fix redirect context on creating duplicate categories or if new cateogry is created.
+    To implement tomorrow:
+        1. Add new product
+        2. Display all products
+        
 
+    TODOs for the entire web appl.
+        1. Detailed product view
+        2. Update product details
+        3. Delete product
+        4. Update category name
+        5. Delete a category
 */
