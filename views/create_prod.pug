@@ -1,62 +1,80 @@
 extends layout 
 
 block content 
-    h1 Add Product to the Inventory
+
+    a(href="/category/products" id="goback") <- Go back
+
+    h1 Add a Product to the Inventory
 
     .product-form
         form(action="" method="POST" enctype="multipart/form-data")
             .col1
                 .prod-inp.inp
-                    label(for="name") Product Name
-                    input(id='name' type="text" name="product" placeholder="product name..." required)
-                .cat-dropdown.inp
-                    label(for="category") Category
-                    select(type='select', placeholder='Select Category' name='category' required='true' id="category")
-                        for cat in category
-                            if cat
-                                p= cat._id
-                                //p= product.cat._id
-                                option(value=(cat._id)) #{cat.name}
-                            else
-                                .alert
-                                    span(class="closebtn") &times;
-                                    p Please make a category first before adding a product
-                .prod-img.inp
-                    label(for="img") Select image 
-                    input(type="file", name="image", id='img')
+                    label(for="name") Product Name 
+                        span(id='req') *
+                    input(id='name' type="text" name="product" placeholder="Product name..." required)
+                .cat-img-cont
+                    .cat-dropdown.inp
+                        label(for="category") Select Category
+                            span(id='req') *
+                        select(type='select', placeholder='Select Category' name='category' required='true' id="category")
+                            for cat in category
+                                if cat
+                                    p= cat._id
+                                    //p= product.cat._id
+                                    option(value=(cat._id)) #{cat.name}
+                                else
+                                    .alert
+                                        span(class="closebtn") &times;
+                                        p Please make a category first before adding a product
+                    .prod-img.inp
+                        .img-lbl
+                            label(for="img") Upload image
+                                span(id='req') * 
+                        .inp-img
+                            input(type="file", name="image", id='img')
+
                 .price-inp.inp
                     label(for="price") Price
-                    input(id='price' type="number" name="price" placeholder="enter price..." required)
+                        span(id='req') *
+                    input(id='price' type="number" name="price" placeholder="Enter price..." required)
                 .discount-inp.inp
                     label(for="discount") Discount
-                    span This will be used in the website.
+                        span(id='req') *
+                        span(id='info')  (This data would be needed for the website)
                     .discount
                         input(id='discount' type="text" name="discount" placeholder="5, 10, 20..." required)
-                        span %
+                        span  %
+                .weight-inp.inp
+                    label(for="weight") Weight
+                        span(id='req') *
+                        span(id='info')  (in kg)
+                    input(id='weight' type="text" name="weight" placeholder="0.230" required)
+                .dimensions-inp.inp
+                    label(for="dimensions") Dimensions
+                        span(id='req') *
+                        span(id='info')  (Please enter the values in cm separated by a space in the order [L W H])
+                    input(id='dimensions' type="text" name="dimensions" placeholder="2 4 8" required) 
 
             .col2
                 .desc-inp.inp
                     label(for="description") Description
-                    textarea(name="description", cols="30", rows="10" id='description' required)
+                        span(id='req') *
+                    textarea(name="description", cols="30", rows="10" id='description'  placeholder='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.' required)
 
                 .colors-inp.inp
                     label(for="colors") Colors
-                    span Enter colors sperated by a space. Example: Red Yellow Blue...
-                    input(id='colors' type="text" name="colors" placeholder="red yellow green" required)
+                        span(id='req') *
+                        span(id='info')  (Please enter the colors sperated by a space. Example: Red Yellow Green...)
+                    input(id='colors' type="text" name="colors" placeholder="Red Yellow Green" required)
 
                 .stock-inp.inp
                     label(for="stock") Stock
+                        span(id='req') *
                     input(id='stock' type="text" name="stock" placeholder="120, 500..." required)
-                .weight-inp.inp
-                    label(for="weight") Weight in kg
-                    input(id='weight' type="text" name="weight" placeholder="0.230" required)
-                .dimensions-inp.inp
-                    label(for="dimensions") Dimensions
-                    span Please enter the values separated by a space in the order ( L W H) {cm}
-                    input(id='dimensions' type="text" name="dimensions" placeholder="2 4 8" required) 
             
 
-            button(type="submit") Add
+                button(type="submit") Add
     
     if errors
         for err in errors

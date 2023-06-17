@@ -145,13 +145,14 @@ app.use(function (err, req, res, next) {
 module.exports = app
 
 /*
-    To implement tomorrow:
+    Completed:
         ✅ Add new product
         ✅ Display all products
-        
+        ✅ Detailed product view
+        ✅ Style product input form
 
     TODOs for the entire web appl.
-        1. Detailed product view
+        1. Filter products by category on home page.
         2. Update product details
         3. Delete product
         4. Update category name

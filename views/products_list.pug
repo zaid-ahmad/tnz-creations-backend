@@ -30,7 +30,8 @@ block content
                         .col1
                             .product-name.product-attr
                                 p Name
-                                span= product.name
+                                - const prodName = product.name.charAt(0).toUpperCase() + product.name.slice(1);
+                                span #{prodName}
 
                             .product-stock.product-attr
                                 p Stock

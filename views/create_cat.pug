@@ -1,6 +1,8 @@
 extends layout 
 
 block content 
+    a(href="/category/products" id="goback") <- Go back
+
     h1 Create a new category
 
     .general-form
@@ -8,7 +10,7 @@ block content
 
             .cat-inp.inp
                 label(for="name") Category Name
-                input(id='name' type="text" name="category" placeholder="category name...") 
+                input(id='name' type="text" name="category" placeholder="Category name...") 
 
             button(type="submit")  Create
 

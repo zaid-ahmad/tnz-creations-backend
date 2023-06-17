@@ -190,7 +190,8 @@ header h2 {
     width: 15rem;
 }
 
-.general-form button {
+.general-form button,
+.product-form button {
     border: none;
     width: 6rem;
     height: 2rem;
@@ -203,7 +204,8 @@ header h2 {
     cursor: pointer;
 }
 
-.general-form button:hover {
+.general-form button:hover,
+.product-form button:hover {
     background-color: #000000;
 }
 
@@ -239,9 +241,61 @@ header h2 {
 }
 
 .product-form form {
+    margin-top: 1rem;
     display: grid;
     grid-template-columns: auto auto;
     gap: 5rem;
+}
+
+.product-form label {
+    text-transform: uppercase;
+    font-weight: 600;
+    color: #2f3542;
+    font-size: 0.9rem;
+}
+
+.product-form input,
+textarea,
+select {
+    padding: 1%;
+    border: 1px solid #2f3542;
+    border-radius: 6px;
+    resize: none;
+}
+
+.cat-img-cont {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 5rem;
+}
+
+.product-form select,
+input[type='file'] {
+    cursor: pointer;
+}
+
+.product-form select {
+    width: 11rem;
+}
+
+.product-form #req {
+    color: #ff4757;
+}
+
+.product-form #info {
+    text-transform: initial;
+    font-weight: 400;
+    font-size: 0.83rem;
+    color: #2f3542;
+}
+
+.product-form .inp {
+    margin-top: 2%;
+}
+
+.product-form button {
+    margin-top: 2rem;
 }
 
 #showing {
@@ -293,6 +347,7 @@ header h2 {
 .product-attr p,
 .cont p {
     margin-top: 1rem;
+    margin-bottom: 0.2rem;
     text-transform: uppercase;
     font-weight: 600;
     color: #747d8c;
@@ -445,4 +500,5 @@ td {
 #goback {
     text-decoration: none;
     color: #000;
+    margin-bottom: 2%;
 }
