@@ -1,4 +1,60 @@
 extends layout 
 
 block content 
-    h1= title
+
+    if message
+      .alert
+        span(class="closebtn") &times;
+        p= message
+
+    .semi-header
+      a(href="/category/products/create")
+        .add-prod-btn.link-btn
+          p Add Product
+          p(id="plus") +
+
+      a(href="/category/new")
+        .add-cat-btn.link-btn
+          p(style="width: 13.5rem") Create new category
+          p(id="plus") +
+
+    if products_list 
+        - const numberOfProds = products_list.length 
+        h2(id='showing') Showing #{numberOfProds > 1 ? `${numberOfProds} Products` : "1 Product"} 
+        .products-list 
+            for product in products_list 
+                .product
+                    .prod-img
+                        img(src=`/images/uploads/${product.image}`, alt="Image")
+                    .prod-info
+                        .col1
+                            .product-name.product-attr
+                                p Name
+                                span= product.name
+
+                            .product-stock.product-attr
+                                p Stock
+                                span= product.stock
+
+                            .product-cat.product-attr
+                                p Category
+                                span= product.category.name
+                        
+                        .col2 
+                            .product-weight.product-attr
+                                p Weight
+                                span #{product.weight} kg
+
+                            .product-price.product-attr
+                                p Price
+                                span ₹#{product.price}
+
+                            .product-colors.product-attr
+                                span Available Colors
+                                p(id='colors') #{product.colors}
+                        
+                        .span(colspan='2')
+                            a(href=`/category/products/${product._id}`)
+                                .details-btn
+                                    p View More 
+                            

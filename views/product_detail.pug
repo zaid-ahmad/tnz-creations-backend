@@ -1,0 +1,65 @@
+extends layout 
+
+block content
+
+    a(href="/category/products" id="goback") <- Go back
+
+    .cont
+        .product-container
+            .one
+                .prod-det-img 
+                    img(src=`/images/uploads/${image}`, alt=`Image of ${name}`)
+
+            .two
+                .prod-det-name
+                    p Name
+                    h1= name.charAt(0).toUpperCase() + name.slice(1)
+
+                .prod-det-cat 
+                    p Category 
+                    span= category.name
+
+                .prod-det-price 
+                    p Price 
+                    span= price
+
+                .prod-det-discount 
+                    p Discount (This data is for the website)
+                    span= discount
+
+                .prod-det-description 
+                    p Description 
+                    span= description.charAt(0).toUpperCase() + description.slice(1)
+            .three
+                p Additional Information
+
+                table
+                    tr
+                        td Colors 
+                        td= colors
+                    tr
+                        td Stock 
+                        td= stock
+                    tr
+                        td Weight 
+                        td #{weight} kg
+                    tr
+                        td Dimensions 
+                        td #{dimensions} cm
+
+                .btns
+                    a(href=`/category/products/${id}/update`)
+                        .update-btn.action-btn
+                            h3 Update 
+
+                    a(href=`/category/products/${id}/delete`)
+                        .delete-btn.action-btn
+                            h3 Delete
+
+
+        
+
+         
+
+
+        

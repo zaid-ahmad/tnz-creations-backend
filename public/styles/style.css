@@ -243,3 +243,206 @@ header h2 {
     grid-template-columns: auto auto;
     gap: 5rem;
 }
+
+#showing {
+    padding-top: 3%;
+}
+
+.products-list {
+    display: grid;
+    grid-template-columns: auto auto;
+    padding-top: 2rem;
+    gap: 2rem;
+}
+
+.product {
+    box-shadow: 0 0px 6px -1px rgb(0 0 0 / 0.1);
+    padding: 1%;
+    border-radius: 6px;
+    width: 41rem;
+}
+
+.prod-info {
+    display: grid;
+    grid-template-columns: auto auto;
+    align-content: center;
+    gap: 3rem;
+}
+
+.product img {
+    width: 18rem;
+    height: 16rem;
+    border-radius: 6px;
+}
+
+.prod-img {
+    display: flex;
+    align-items: center;
+}
+
+.product {
+    display: flex;
+    gap: 3rem;
+}
+
+.product-attr {
+    display: flex;
+    flex-direction: column;
+}
+
+.product-attr p,
+.cont p {
+    margin-top: 1rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: #747d8c;
+    font-size: 0.8rem;
+}
+
+.product-attr span {
+    font-size: 1.2rem;
+    font-weight: 300;
+}
+
+.product .cat {
+    margin-top: 5rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.product .span {
+    grid-column: 1 / -1;
+}
+
+/* tausif@#Tnzcreations99110 */
+.product .details-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 2rem;
+    background-color: #000;
+    border-radius: 6px;
+}
+
+.product a {
+    text-decoration: none;
+    color: #f1f2f6;
+    padding: 2%;
+}
+
+.product-colors span {
+    margin-top: 1rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: #747d8c;
+    font-size: 0.8rem;
+}
+
+.product-colors #colors {
+    width: 0.3rem;
+    line-height: 0;
+    font-size: 1rem;
+    font-weight: 300;
+    text-transform: capitalize;
+    color: #000;
+}
+
+.cont {
+    margin-top: 2rem;
+    box-shadow: 0 0px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+.product-container {
+    display: grid;
+    grid-template-columns: 30rem auto auto;
+    justify-items: stretch;
+    align-content: center;
+    gap: 3rem;
+}
+
+.product-container .prod-det-img img {
+    width: 30rem;
+    height: auto;
+    border-radius: 6px;
+}
+
+.two,
+.three {
+    margin-top: 2rem;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+tr,
+td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: center;
+}
+
+.three .btns {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 3rem;
+}
+
+.btns a {
+    text-decoration: none;
+}
+
+.update-btn,
+.delete-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 6px;
+    height: 2rem;
+    width: 5rem;
+    padding: 1%;
+    transition: 0.2s;
+}
+
+.update-btn {
+    border: 2px solid #ffa502;
+}
+
+.delete-btn {
+    border: 2px solid #ff4757;
+}
+
+.update-btn h3,
+.delete-btn h3 {
+    margin-top: 0;
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: 0.8rem;
+}
+
+.update-btn {
+    color: #ffa502;
+}
+
+.delete-btn {
+    color: #ff4757;
+}
+
+.update-btn:hover {
+    background-color: #ffa502;
+    color: #fff;
+}
+
+.delete-btn:hover {
+    background-color: #ff4757;
+    color: #fff;
+}
+
+#goback {
+    text-decoration: none;
+    color: #000;
+}

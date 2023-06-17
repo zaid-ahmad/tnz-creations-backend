@@ -1,5 +1,17 @@
 const express = require('express')
 const router = express.Router()
+const multer = require('multer')
+const path = require('path')
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'public/images/uploads')
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname))
+    },
+})
+const upload = multer({ storage: storage })
 
 const category_controller = require('../controllers/category_controller')
 const products_controller = require('../controllers/products_controller')
@@ -64,14 +76,16 @@ router.get(
     products_controller.product_delete_get
 )
 
+/* POST request for adding a product */
+router.post(
+    '/products/create',
+    upload.single('image'),
+    products_controller.product_create_post
+)
+
 /* POST request for one product */
 router.post('/products/:id', (req, res) => {
     products_controller.product_detail_post
-})
-
-/* POST request for adding a product */
-router.post('/products/create', (req, res) => {
-    products_controller.product_create_post
 })
 
 /* POST request for updating a product */

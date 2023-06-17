@@ -15,6 +15,7 @@ const indexRouter = require('./routes/index')
 const categoryRouter = require('./routes/category')
 
 const Admin = require('./models/admin')
+const Product = require('./models/product')
 
 mongoose.set('strictQuery', false)
 
@@ -99,16 +100,16 @@ app.get('/', (req, res) => {
 })
 
 app.post('/login', (req, res, next) => {
-    passport.authenticate('local', (err, user, info) => {
+    passport.authenticate('local', async (err, user, info) => {
         if (err) {
             // Handle error
             return next(err)
         }
         if (!user) {
             // Render login page with error message
+
             return res.render('index', {
                 message: info.message,
-                createCatMsg: '',
             })
         }
         // User authenticated successfully
@@ -118,7 +119,7 @@ app.post('/login', (req, res, next) => {
                 return next(err)
             }
             // Redirect to a different page
-            return res.redirect('/')
+            return res.redirect('/category/products/')
         })
     })(req, res, next)
 })
@@ -145,8 +146,8 @@ module.exports = app
 
 /*
     To implement tomorrow:
-        1. Add new product
-        2. Display all products
+        ✅ Add new product
+        ✅ Display all products
         
 
     TODOs for the entire web appl.

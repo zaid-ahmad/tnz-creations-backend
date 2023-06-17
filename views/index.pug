@@ -4,23 +4,6 @@ block content
 
   if user
 
-    if message
-      .alert
-        span(class="closebtn") &times;
-        p= message
-
-    .semi-header
-      a(href="/category/products/create")
-        .add-prod-btn.link-btn
-          p Add Product
-          p(id="plus") +
-
-      a(href="/category/new")
-        .add-cat-btn.link-btn
-          p(style="width: 13.5rem") Create new category
-          p(id="plus") +
-
-
   else
     if message
       .alert

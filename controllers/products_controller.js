@@ -1,21 +1,50 @@
-const asyncHandler = require('express-async-handler')
 const Product = require('../models/product')
 const Category = require('../models/category')
 
-exports.index = (req, res) => {
-    res.render('products_list', { title: 'Showing 92 products' })
-}
+const asyncHandler = require('express-async-handler')
+const { body, validationResult } = require('express-validator')
 
-exports.product_detail_get = (req, res) => {
-    res.json({ IMPLEMENT: 'product detail view' })
-}
+exports.index = asyncHandler(async (req, res) => {
+    const context = req.query.context
+    const [allProducts] = await Promise.all([
+        Product.find().populate('category').exec(),
+    ])
+
+    res.render('products_list', {
+        message: context,
+        products_list: allProducts,
+    })
+})
+
+exports.product_detail_get = asyncHandler(async (req, res) => {
+    const [product] = await Promise.all([
+        Product.findById(req.params.id).populate('category').exec(),
+    ])
+
+    const dimensions_formatted = product.dimensions
+        .join(' x ')
+        .replace(/,/g, ' x ')
+
+    res.render('product_detail', {
+        name: product.name,
+        image: product.image,
+        price: product.price,
+        discount: product.discount,
+        category: product.category,
+        description: product.description,
+        colors: product.colors,
+        stock: product.stock,
+        weight: product.weight,
+        dimensions: dimensions_formatted,
+        id: product._id,
+    })
+})
 
 exports.product_create_get = asyncHandler(async (req, res, next) => {
     const [allCategories] = await Promise.all([Category.find().exec()])
     res.render('create_prod', {
         category: allCategories,
     })
-    console.log(allCategories)
 })
 
 exports.product_update_get = (req, res) => {
@@ -26,9 +55,87 @@ exports.product_delete_get = (req, res) => {
     res.json({ IMPLEMENT: 'product delete view' })
 }
 
-exports.product_create_post = asyncHandler(async (req, res) => {
-    res.json({ IMPLEMENT: 'create update' })
-})
+exports.product_create_post = [
+    (req, res, next) => {
+        if (!(req.body.colors instanceof Array)) {
+            if (typeof req.body.colors === 'undefined') req.body.colors = []
+            else {
+                const colors = req.body.colors.split(' ')
+                req.body.colors = colors
+            }
+        }
+        next()
+    },
+
+    (req, res, next) => {
+        if (!(req.body.dimensions instanceof Array)) {
+            if (typeof req.body.dimensions === 'undefined')
+                req.body.dimensions = []
+            else {
+                const dimension = req.body.dimensions.split(' ')
+                req.body.dimensions = dimension
+            }
+        }
+        next()
+    },
+
+    body('product', 'Name must not be empty.')
+        .trim()
+        .isLength({ min: 1 })
+        .escape(),
+    body('price', 'Price must not be empty.')
+        .trim()
+        .isLength({ min: 1 })
+        .escape(),
+    body('discount', 'Discount must not be empty.')
+        .trim()
+        .isLength({ min: 1 })
+        .escape(),
+    body('description', 'Description must not be empty.')
+        .trim()
+        .isLength({ min: 1 })
+        .escape(),
+    body('stock', 'Stock must not be empty.')
+        .trim()
+        .isLength({ min: 1 })
+        .escape(),
+    body('weight', 'Weight must not be empty.')
+        .trim()
+        .isLength({ min: 1 })
+        .escape(),
+
+    asyncHandler(async (req, res) => {
+        const errors = validationResult(req)
+        const product = new Product({
+            name: req.body.product,
+            image: req.file.filename,
+            price: req.body.price,
+            discount: req.body.discount,
+            category: req.body.category,
+            description: req.body.description,
+            colors: req.body.colors,
+            stock: req.body.stock,
+            weight: req.body.weight,
+            dimensions: req.body.dimensions,
+        })
+
+        if (!errors.isEmpty()) {
+            // There are errors. Render form again with sanitized values/error messages.
+            const [allCategories] = await Promise.all([Category.find().exec()])
+            res.render('create_prod', {
+                category: allCategories,
+                errors: errors.array(),
+            })
+        } else {
+            // Data from form is valid. Save book.
+            await product.save()
+            const context = 'Product created successfully'
+            res.redirect(
+                `/category/products?context=${encodeURIComponent(context)}`
+            )
+        }
+    }),
+]
 
 exports.product_update_post = asyncHandler(async (req, res) => {
     res.json({ IMPLEMENT: 'product update' })

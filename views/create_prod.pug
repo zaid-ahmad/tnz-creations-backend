@@ -5,7 +5,6 @@ block content
 
     .product-form
         form(action="" method="POST" enctype="multipart/form-data")
-
             .col1
                 .prod-inp.inp
                     label(for="name") Product Name
@@ -27,12 +26,12 @@ block content
                     input(type="file", name="image", id='img')
                 .price-inp.inp
                     label(for="price") Price
-                    input(id='price' type="number" name="product" placeholder="enter price..." required)
+                    input(id='price' type="number" name="price" placeholder="enter price..." required)
                 .discount-inp.inp
                     label(for="discount") Discount
                     span This will be used in the website.
                     .discount
-                        input(id='discount' type="text" name="product" placeholder="5, 10, 20..." required)
+                        input(id='discount' type="text" name="discount" placeholder="5, 10, 20..." required)
                         span %
 
             .col2
@@ -42,22 +41,22 @@ block content
 
                 .colors-inp.inp
                     label(for="colors") Colors
-                    span Enter colors sperated by a comma. Example: Red, Yellow, Blue...
-                    input(id='colors' type="text" name="product" placeholder="red, yellow, green" required)
+                    span Enter colors sperated by a space. Example: Red Yellow Blue...
+                    input(id='colors' type="text" name="colors" placeholder="red yellow green" required)
 
                 .stock-inp.inp
                     label(for="stock") Stock
-                    input(id='stock' type="text" name="product" placeholder="120, 500..." required)
+                    input(id='stock' type="text" name="stock" placeholder="120, 500..." required)
                 .weight-inp.inp
                     label(for="weight") Weight in kg
-                    input(id='weight' type="text" name="product" placeholder="0.230" required)
+                    input(id='weight' type="text" name="weight" placeholder="0.230" required)
                 .dimensions-inp.inp
                     label(for="dimensions") Dimensions
-                    span Please enter the values separated by a space in the order ( L W H)
-                    input(id='dimensions' type="text" name="product" placeholder="product name..." required) 
+                    span Please enter the values separated by a space in the order ( L W H) {cm}
+                    input(id='dimensions' type="text" name="dimensions" placeholder="2 4 8" required) 
             
 
-            button Add
+            button(type="submit") Add
     
     if errors
         for err in errors
