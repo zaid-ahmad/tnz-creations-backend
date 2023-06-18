@@ -5,10 +5,18 @@ const path = require('path')
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'public/images/uploads')
+        if (file) {
+            cb(null, 'public/images/uploads')
+        } else {
+            cb(null, '') // No destination if no file uploaded
+        }
     },
     filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname))
+        if (file) {
+            cb(null, Date.now() + path.extname(file.originalname))
+        } else {
+            cb(null, '') // No filename if no file uploaded
+        }
     },
 })
 const upload = multer({ storage: storage })
@@ -89,9 +97,11 @@ router.post('/products/:id', (req, res) => {
 })
 
 /* POST request for updating a product */
-router.post('/products/:id/update', (req, res) => {
+router.post(
+    '/products/:id/update',
+    upload.single('image'),
     products_controller.product_update_post
-})
+)
 
 /* POST request for deleting a product */
 router.post('/products/:id/delete', (req, res) => {

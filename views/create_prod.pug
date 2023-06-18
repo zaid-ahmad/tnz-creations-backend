@@ -12,17 +12,23 @@ block content
                 .prod-inp.inp
                     label(for="name") Product Name 
                         span(id='req') *
-                    input(id='name' type="text" name="product" placeholder="Product name..." required)
+                    input(id='name' type="text" name="product" placeholder="Product name..." required value=(undefined===product ? '' : product.name))
                 .cat-img-cont
                     .cat-dropdown.inp
                         label(for="category") Select Category
                             span(id='req') *
-                        select(type='select', placeholder='Select Category' name='category' required='true' id="category")
+                        select(type='select', placeholder='Select Category' name='category' required='true' id="category" )
                             for cat in category
                                 if cat
-                                    p= cat._id
-                                    //p= product.cat._id
-                                    option(value=(cat._id)) #{cat.name}
+                                    if product
+                                        p= cat._id
+                                        //p= product.cat._id
+                                        - const verdict = cat._id.toString()===product.category._id.toString()
+
+                                        option(value=(cat._id) selected=( verdict ? 'selected' : false)) #{cat.name}
+                                    
+                                    else 
+                                        option(value=(cat._id)) #{cat.name}
                                 else
                                     .alert
                                         span(class="closebtn") &times;
@@ -37,41 +43,41 @@ block content
                 .price-inp.inp
                     label(for="price") Price
                         span(id='req') *
-                    input(id='price' type="number" name="price" placeholder="Enter price..." required)
+                    input(id='price' type="number" name="price" placeholder="Enter price..." value=(undefined===product ? '' : product.price) required )
                 .discount-inp.inp
                     label(for="discount") Discount
                         span(id='req') *
                         span(id='info')  (This data would be needed for the website)
                     .discount
-                        input(id='discount' type="text" name="discount" placeholder="5, 10, 20..." required)
+                        input(id='discount' type="text" name="discount" placeholder="5, 10, 20..." required value=(undefined===product ? '' : product.discount))
                         span  %
                 .weight-inp.inp
                     label(for="weight") Weight
                         span(id='req') *
                         span(id='info')  (in kg)
-                    input(id='weight' type="text" name="weight" placeholder="0.230" required)
+                    input(id='weight' type="text" name="weight" placeholder="0.230" required value=(undefined===product ? '' : product.weight))
                 .dimensions-inp.inp
                     label(for="dimensions") Dimensions
                         span(id='req') *
                         span(id='info')  (Please enter the values in cm separated by a space in the order [L W H])
-                    input(id='dimensions' type="text" name="dimensions" placeholder="2 4 8" required) 
+                    input(id='dimensions' type="text" name="dimensions" placeholder="2 4 8" required value=(undefined===product ? '' : product.dimensions.join(" "))) 
 
             .col2
                 .desc-inp.inp
                     label(for="description") Description
                         span(id='req') *
-                    textarea(name="description", cols="30", rows="10" id='description'  placeholder='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.' required)
+                    textarea(name="description", cols="30", rows="10" id='description'  placeholder='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.' required) #{undefined===product ? '' : product.description}
 
                 .colors-inp.inp
                     label(for="colors") Colors
                         span(id='req') *
                         span(id='info')  (Please enter the colors sperated by a space. Example: Red Yellow Green...)
-                    input(id='colors' type="text" name="colors" placeholder="Red Yellow Green" required)
+                    input(id='colors' type="text" name="colors" placeholder="Red Yellow Green" required value=(undefined===product ? '' : product.colors.join(" ")))
 
                 .stock-inp.inp
                     label(for="stock") Stock
                         span(id='req') *
-                    input(id='stock' type="text" name="stock" placeholder="120, 500..." required)
+                    input(id='stock' type="text" name="stock" placeholder="120, 500..." required value=(undefined===product ? '' : product.stock))
             
 
                 button(type="submit") Add

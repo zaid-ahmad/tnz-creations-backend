@@ -47,9 +47,23 @@ exports.product_create_get = asyncHandler(async (req, res, next) => {
     })
 })
 
-exports.product_update_get = (req, res) => {
-    res.json({ IMPLEMENT: 'product update view' })
-}
+exports.product_update_get = asyncHandler(async (req, res) => {
+    const [product, allCategories] = await Promise.all([
+        Product.findById(req.params.id).populate('category').exec(),
+        Category.find().exec(),
+    ])
+
+    for (const category of allCategories) {
+        if (category._id.toString() === product.category._id.toString()) {
+            category.checked = 'true'
+        }
+    }
+
+    res.render('create_prod', {
+        product: product,
+        category: allCategories,
+    })
+})
 
 exports.product_delete_get = (req, res) => {
     res.json({ IMPLEMENT: 'product delete view' })
@@ -137,9 +151,101 @@ exports.product_create_post = [
     }),
 ]
 
-exports.product_update_post = asyncHandler(async (req, res) => {
-    res.json({ IMPLEMENT: 'product update' })
-})
+exports.product_update_post = [
+    (req, res, next) => {
+        if (!(req.body.colors instanceof Array)) {
+            if (typeof req.body.colors === 'undefined') req.body.colors = []
+            else {
+                const colors = req.body.colors.split(' ')
+                req.body.colors = colors
+            }
+        }
+        next()
+    },
+
+    (req, res, next) => {
+        if (!(req.body.dimensions instanceof Array)) {
+            if (typeof req.body.dimensions === 'undefined')
+                req.body.dimensions = []
+            else {
+                const dimension = req.body.dimensions.split(' ')
+                req.body.dimensions = dimension
+            }
+        }
+        next()
+    },
+
+    body('product', 'Name must not be empty.')
+        .trim()
+        .isLength({ min: 1 })
+        .escape(),
+    body('price', 'Price must not be empty.')
+        .trim()
+        .isLength({ min: 1 })
+        .escape(),
+    body('discount', 'Discount must not be empty.')
+        .trim()
+        .isLength({ min: 1 })
+        .escape(),
+    body('description', 'Description must not be empty.')
+        .trim()
+        .isLength({ min: 1 })
+        .escape(),
+    body('stock', 'Stock must not be empty.')
+        .trim()
+        .isLength({ min: 1 })
+        .escape(),
+    body('weight', 'Weight must not be empty.')
+        .trim()
+        .isLength({ min: 1 })
+        .escape(),
+
+    asyncHandler(async (req, res) => {
+        const errors = validationResult(req)
+
+        const product = new Product({
+            name: req.body.product,
+            price: req.body.price,
+            discount: req.body.discount,
+            category: req.body.category,
+            description: req.body.description,
+            colors: req.body.colors,
+            stock: req.body.stock,
+            weight: req.body.weight,
+            dimensions: req.body.dimensions,
+            _id: req.params.id,
+        })
+
+        if (req.file) {
+            // An image was uploaded
+            product.image = req.file.filename
+        } else {
+            // No new image uploaded, retain the old filename
+            const oldProduct = await Product.findById(req.params.id)
+            product.image = oldProduct.image
+        }
+
+        if (!errors.isEmpty()) {
+            // There are errors. Render form again with sanitized values/error messages.
+            const [allCategories] = await Promise.all([Category.find().exec()])
+            res.render('create_prod', {
+                category: allCategories,
+                errors: errors.array(),
+            })
+        } else {
+            // Data from form is valid. Save book.
+            const thebook = await Product.findByIdAndUpdate(
+                req.params.id,
+                product,
+                {}
+            )
+            const context = 'Product updated successfully'
+            res.redirect(
+                `/category/products?context=${encodeURIComponent(context)}`
+            )
+        }
+    }),
+]
 
 exports.product_delete_post = asyncHandler(async (req, res) => {
     res.json({ IMPLEMENT: 'product delete' })
