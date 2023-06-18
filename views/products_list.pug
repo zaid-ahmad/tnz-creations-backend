@@ -20,7 +20,10 @@ block content
 
     if products_list 
         - const numberOfProds = products_list.length 
-        h2(id='showing') Showing #{numberOfProds > 1 ? `${numberOfProds} Products` : "1 Product"} 
+        if (numberOfProds === 0)
+            h2#display-msg All products will show here...
+        else 
+            h2(id='showing') Showing #{numberOfProds >= 1 ? `${numberOfProds} Products` : `1 Product`} 
         .products-list 
             for product in products_list 
                 .product

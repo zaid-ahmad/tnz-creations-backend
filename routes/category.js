@@ -34,20 +34,7 @@ function ensureAuthenticated(req, res, next) {
 ////////////////////
 
 router.get('/new', ensureAuthenticated, category_controller.add_category_get)
-router.get(
-    '/update',
-    ensureAuthenticated,
-    category_controller.update_category_get
-)
-router.get(
-    '/delete',
-    ensureAuthenticated,
-    category_controller.delete_category_get
-)
-
 router.post('/new', category_controller.add_category_post)
-router.post('/update', category_controller.update_category_post)
-router.post('/delete', category_controller.delete_category_post)
 
 ////////////////////
 /* PRODUCT ROUTES */
@@ -104,8 +91,10 @@ router.post(
 )
 
 /* POST request for deleting a product */
-router.post('/products/:id/delete', (req, res) => {
+router.post(
+    '/products/:id/delete',
+    upload.single('image'),
     products_controller.product_delete_post
-})
+)
 
 module.exports = router

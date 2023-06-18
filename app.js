@@ -151,10 +151,8 @@ module.exports = app
         ✅ Detailed product view
         ✅ Style product input form
         ✅ Update product details
+        ✅ Delete product
 
     TODOs for the entire web appl.
         1. Filter products by category on home page.
-        3. Delete product
-        4. Update category name
-        5. Delete a category
 */

@@ -8,16 +8,6 @@ exports.add_category_get = (req, res) => {
     res.render('create_cat')
 }
 
-exports.update_category_get = (req, res) => {
-    // res.render('category_form', { title: 'Update Category Name' })
-    res.json({ IMPLEMENT: 'category update view' })
-}
-
-exports.delete_category_get = (req, res) => {
-    // res.render('category_form', { title: 'Delete a Category' })
-    res.json({ IMPLEMENT: 'category delete view' })
-}
-
 exports.add_category_post = [
     body('category', 'Category name must contain at least 3 characters')
         .trim()
@@ -54,16 +44,10 @@ exports.add_category_post = [
                 await category.save()
                 // New category saved. Redirect to genre detail page.
                 const context = 'Category created successfully'
-                res.redirect(`/?context=${encodeURIComponent(context)}`)
+                res.redirect(
+                    `/category/products?context=${encodeURIComponent(context)}`
+                )
             }
         }
     }),
 ]
-
-exports.update_category_post = asyncHandler(async (req, res) => {
-    res.json({ IMPLEMENT: 'category update' })
-})
-
-exports.delete_category_post = asyncHandler(async (req, res) => {
-    res.json({ IMPLEMENT: 'category delete' })
-})

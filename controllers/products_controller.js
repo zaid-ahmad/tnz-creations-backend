@@ -65,9 +65,30 @@ exports.product_update_get = asyncHandler(async (req, res) => {
     })
 })
 
-exports.product_delete_get = (req, res) => {
-    res.json({ IMPLEMENT: 'product delete view' })
-}
+exports.product_delete_get = asyncHandler(async (req, res) => {
+    const [product] = await Promise.all([
+        Product.findById(req.params.id).populate('category').exec(),
+    ])
+
+    const dimensions_formatted = product.dimensions
+        .join(' x ')
+        .replace(/,/g, ' x ')
+
+    res.render('product_delete', {
+        name: product.name,
+        image: product.image,
+        price: product.price,
+        discount: product.discount,
+        category: product.category,
+        description: product.description,
+        colors: product.colors,
+        stock: product.stock,
+        weight: product.weight,
+        dimensions: dimensions_formatted,
+        id: product._id,
+        product: product,
+    })
+})
 
 exports.product_create_post = [
     (req, res, next) => {
@@ -248,7 +269,19 @@ exports.product_update_post = [
 ]
 
 exports.product_delete_post = asyncHandler(async (req, res) => {
-    res.json({ IMPLEMENT: 'product delete' })
+    const [product] = await Promise.all([
+        Product.findById(req.params.id).populate('category').exec(),
+    ])
+
+    if (product === null) {
+        console.log('ITS NULL')
+    } else {
+        await Product.findByIdAndRemove(req.body.id)
+        const context = 'Product deleted successfully'
+        res.redirect(
+            `/category/products?context=${encodeURIComponent(context)}`
+        )
+    }
 })
 
 //tausif@#Tnzcreations99110
