@@ -42,6 +42,7 @@ router.post('/new', category_controller.add_category_post)
 
 /* GET request for home page. */
 router.get('/products/', ensureAuthenticated, products_controller.index)
+router.post('/products/', ensureAuthenticated, products_controller.index.post)
 
 /* GET request for add product page. */
 router.get(

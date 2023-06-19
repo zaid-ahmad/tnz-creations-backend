@@ -20,10 +20,22 @@ block content
 
     if products_list 
         - const numberOfProds = products_list.length 
+        
         if (numberOfProds === 0)
-            h2#display-msg All products will show here...
+            h2#display-msg No products. Please add some products.
         else 
-            h2(id='showing') Showing #{numberOfProds >= 1 ? `${numberOfProds} Products` : `1 Product`} 
+            h2(id='showing') Showing #{numberOfProds >= 1 ? `${numberOfProds} Products` : `1 Product`} #{selectedCategory == "all" ? "" : `in "${selectedCategory}" category`} 
+
+        .sort-drop 
+            form(action="" method='POST') 
+                select(type='select' placeholder='Filter by category' name='category')
+                    option(value="all") All Categories 
+                    each cat in category
+                        if cat
+                            option(value=(cat._id)) #{cat.name}
+                
+                button Filter
+
         .products-list 
             for product in products_list 
                 .product

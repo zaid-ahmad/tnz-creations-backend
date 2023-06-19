@@ -153,6 +153,7 @@ module.exports = app
         ✅ Update product details
         ✅ Delete product
 
-    TODOs for the entire web appl.
+    TODOs:
         1. Filter products by category on home page.
+        2. Deploy
 */

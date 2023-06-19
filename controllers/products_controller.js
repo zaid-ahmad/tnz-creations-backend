@@ -6,14 +6,47 @@ const { body, validationResult } = require('express-validator')
 
 exports.index = asyncHandler(async (req, res) => {
     const context = req.query.context
-    const [allProducts] = await Promise.all([
+    const [allProducts, allCategories] = await Promise.all([
         Product.find().populate('category').exec(),
+        Category.find().exec(),
     ])
 
     res.render('products_list', {
         message: context,
         products_list: allProducts,
+        category: allCategories,
     })
+})
+
+exports.index.post = asyncHandler(async (req, res) => {
+    const cat = req.body.category
+
+    if (cat !== 'all') {
+        const selected = await Category.find({ _id: `${cat}` }).exec()
+        const [allProducts, allCategories] = await Promise.all([
+            Product.find({ category: `${cat}` })
+                .populate('category')
+                .exec(),
+            Category.find().exec(),
+        ])
+
+        res.render('products_list', {
+            products_list: allProducts,
+            category: allCategories,
+            selectedCategory: selected[0].name,
+        })
+    } else {
+        const [allProducts, allCategories] = await Promise.all([
+            Product.find().populate('category').exec(),
+            Category.find().exec(),
+        ])
+
+        res.render('products_list', {
+            products_list: allProducts,
+            category: allCategories,
+            selectedCategory: 'all',
+        })
+    }
 })
 
 exports.product_detail_get = asyncHandler(async (req, res) => {

@@ -521,3 +521,28 @@ td {
 #display-msg {
     margin-top: 2rem;
 }
+
+.sort-drop {
+    margin-top: 1rem;
+}
+
+.sort-drop button {
+    display: flex;
+    align-items: center;
+    padding: 1% 2%;
+    height: 2rem;
+    background-color: #000;
+    border-radius: 6px;
+    color: #f1f2f6;
+    cursor: pointer;
+}
+
+.sort-drop form {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.sort-drop select {
+    cursor: pointer;
+}
