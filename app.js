@@ -143,17 +143,3 @@ app.use(function (err, req, res, next) {
 })
 
 module.exports = app
-
-/*
-    Completed:
-        ✅ Add new product
-        ✅ Display all products
-        ✅ Detailed product view
-        ✅ Style product input form
-        ✅ Update product details
-        ✅ Delete product
-
-    TODOs:
-        1. Filter products by category on home page.
-        2. Deploy
-*/
