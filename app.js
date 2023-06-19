@@ -8,6 +8,8 @@ const bcrypt = require('bcryptjs')
 const cookieParser = require('cookie-parser')
 const logger = require('morgan')
 const mongoose = require('mongoose')
+const compression = require('compression')
+const helmet = require('helmet')
 
 require('dotenv').config()
 
@@ -29,6 +31,16 @@ async function main() {
 }
 
 const app = express()
+
+app.use(compression())
+app.use(helmet())
+const RateLimit = require('express-rate-limit')
+const limiter = RateLimit({
+    windowMs: 1 * 60 * 1000, // 1 minute
+    max: 20,
+})
+// Apply rate limiter to all requests
+app.use(limiter)
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'))
