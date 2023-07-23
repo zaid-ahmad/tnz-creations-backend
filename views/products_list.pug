@@ -10,21 +10,16 @@ block content
     .semi-header
       a(href="/category/products/create")
         .add-prod-btn.link-btn
-          p Add Product
           p(id="plus") +
+          p Add Product
 
       a(href="/category/new")
         .add-cat-btn.link-btn
-          p(style="width: 13.5rem") Create new category
           p(id="plus") +
+          p(style="width: 13.5rem") Create new category
 
     if products_list 
         - const numberOfProds = products_list.length 
-        
-        if (numberOfProds === 0)
-            h2#display-msg No products. Please add some products.
-        else 
-            h2(id='showing') Showing #{numberOfProds >= 1 ? `${numberOfProds} Products` : `1 Product`} #{selectedCategory == "all" ? "" : `in "${selectedCategory}" category`} 
 
         .sort-drop 
             form(action="" method='POST') 
@@ -35,7 +30,13 @@ block content
                             option(value=(cat._id)) #{cat.name}
                 
                 button Filter
-
+        
+        if (numberOfProds === 0)
+            h2#display-msg No products. Please add some products.
+        else 
+            if (selectedCategory === undefined) 
+                - selectedCategory = 'all'
+            h2(id='showing') Showing #{numberOfProds >= 1 ? numberOfProds : 1} Products #{selectedCategory == "all" ? "" : `in "${selectedCategory}" category`}
         .products-list 
             for product in products_list 
                 .product
@@ -67,7 +68,9 @@ block content
 
                             .product-colors.product-attr
                                 span Available Colors
-                                p(id='colors') #{product.colors}
+                                p(id='colors-container')
+                                    each color in product.colors
+                                        span(id='color') #{color}
                         
                         .span(colspan='2')
                             a(href=`/category/products/${product._id}`)
