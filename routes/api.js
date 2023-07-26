@@ -394,7 +394,12 @@ router.post(
 router.get(
   '/wishlist',
   asyncHandler(async (req, res) => {
-    const wishlist_items = await Wishlist.find()
+    const { email } = req.query
+
+    const user = await User.findOne({ email })
+    const userId = user._id
+
+    const wishlist_items = await Wishlist.find({ user: userId })
 
     if (wishlist_items) {
       res.send(wishlist_items[0].products)
@@ -407,7 +412,12 @@ router.get(
 router.get(
   '/wishlist-products',
   asyncHandler(async (req, res) => {
-    const wishlist_items = await Wishlist.find()
+    const { email } = req.query
+
+    const user = await User.findOne({ email })
+    const userId = user._id
+
+    const wishlist_items = await Wishlist.find({ user: userId })
     const wishlist_product_ids_array = wishlist_items[0].products
 
     if (wishlist_product_ids_array.length > 0) {
@@ -427,7 +437,7 @@ router.get(
 router.delete('/wishlist/remove', async (req, res) => {
   try {
     const { email, itemId } = req.body
-    console.log(email, itemId)
+
     if (!itemId) {
       return res.status(400).json({ error: 'Item ID not provided' })
     }
@@ -456,24 +466,266 @@ router.delete('/wishlist/remove', async (req, res) => {
   }
 })
 
+router.delete('/order/remove-product/:product_id', async (req, res) => {
+  try {
+    const { product_id } = req.params
+    const { email } = req.body
+
+    if (!product_id || !email) {
+      return res.status(400).json({ error: 'Product ID or email not provided' })
+    }
+
+    // Find the user by email
+    const user = await User.findOne({ email })
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' })
+    }
+
+    // Find the user's active order with 'new' status
+    const order = await Order.findOne({ user: user._id, status: 'new' })
+      .populate('products.product')
+      .exec()
+
+    if (!order) {
+      return res.status(404).json({ error: 'Order not found' })
+    }
+
+    console.log('Product Params ID:', product_id)
+    // Find the index of the product in the order's products array
+    const productIndex = order.products.findIndex(
+      (product) => product.product._id.toString() === product_id
+    )
+
+    if (productIndex === -1) {
+      return res.status(404).json({ error: 'Product not found in order' })
+    }
+
+    // Calculate the price of the product to be removed
+    const productToRemove = order.products[productIndex]
+
+    console.log(productToRemove)
+
+    const priceOfProductToRemove =
+      productToRemove.product.price -
+      (productToRemove.product.discount / 100) * productToRemove.product.price
+
+    // Update the totalAmount by subtracting the price of the product to be removed
+    order.totalAmount -= priceOfProductToRemove * productToRemove.quantity
+
+    // Remove the product from the products array
+    order.products.splice(productIndex, 1)
+
+    // Save the updated order
+    await order.save()
+
+    return res
+      .status(200)
+      .json({ message: 'Product removed from order', order })
+  } catch (error) {
+    console.error(error)
+    return res.status(500).json({ error: 'Server error' })
+  }
+})
+
+router.get(
+  '/cart-items',
+  asyncHandler(async (req, res) => {
+    const { email } = req.query
+
+    const user = await User.findOne({ email })
+    const userId = user._id
+
+    const cart_items = await Order.find({ user: userId })
+    const cart_products_ids_array = cart_items[0].products
+
+    if (cart_products_ids_array.length > 0) {
+      const products = await Promise.all(
+        cart_products_ids_array.map(async (product_id) => {
+          const product = await Product.findOne({ _id: product_id.product })
+          return product
+        })
+      )
+      res.send(products)
+    } else {
+      res.status(404).send('Your cart will appear here...')
+    }
+  })
+)
+
+router.get(
+  '/cart/info',
+  asyncHandler(async (req, res) => {
+    const { email } = req.query
+
+    const user = await User.findOne({ email })
+    const userId = user._id
+
+    const order_summary = await Order.find({ user: userId, status: 'new' })
+      .populate('products.product')
+      .exec()
+
+    if (order_summary.length > 0) {
+      let totalAmount = 0
+      order_summary[0].products.forEach((product) => {
+        const price =
+          product.product.price -
+          (product.product.discount / 100) * product.product.price
+        totalAmount += price * product.quantity
+      })
+
+      await Order.findByIdAndUpdate(
+        order_summary[0]._id,
+        { totalAmount },
+        { new: true }
+      )
+
+      const updatedOrderSummary = await Order.findById(order_summary[0]._id)
+        .populate('products.product')
+        .exec()
+
+      res.send(updatedOrderSummary)
+    } else {
+      res.status(404).send('No orders found.')
+    }
+  })
+)
+
+router.get('/cart/:product_id/quantity', async (req, res) => {
+  try {
+    const { product_id } = req.params
+    const { email } = req.query
+
+    const user = await User.findOne({ email })
+    const userId = user._id
+    const order = await Order.findOne({
+      user: userId,
+      'products.product': product_id,
+      status: 'new',
+    })
+
+    if (!order) {
+      return res.status(404).json({ error: 'Order not found.' })
+    }
+
+    const product = order.products.find((product) =>
+      product.product.equals(product_id)
+    )
+
+    if (!product) {
+      return res.status(404).json({ error: 'Product not found in order.' })
+    }
+
+    const productQuantity = product.quantity
+    res.send(productQuantity.toString())
+  } catch {
+    res.status(500).send('something went wrong')
+  }
+})
+
+router.patch('/cart/:product_id/update-quantity', async (req, res) => {
+  try {
+    const { product_id } = req.params
+    const { quantity, email } = req.body
+
+    const user = await User.findOne({ email })
+    const userId = user._id
+
+    if (!quantity || quantity <= 0) {
+      return res.status(400).json({ error: 'Invalid quantity value.' })
+    }
+
+    const order = await Order.findOneAndUpdate(
+      {
+        user: userId,
+        'products.product': product_id,
+      },
+      {
+        $set: { 'products.$.quantity': quantity },
+      },
+      {
+        new: true,
+        populate: { path: 'products.product' },
+      }
+    ).exec()
+
+    if (!order) {
+      return res.status(404).json({ error: 'Order not found.' })
+    }
+
+    const productToUpdate = order.products.find(
+      (product) => product.product._id.toString() === product_id
+    )
+
+    if (!productToUpdate) {
+      return res.status(404).json({ error: 'Product not found in order.' })
+    }
+
+    // Recalculate totalAmount for the order (optional, you can also update it separately)
+    let totalAmount = 0
+    order.products.forEach((product) => {
+      const price =
+        product.product.price -
+        (product.product.discount / 100) * product.product.price
+      totalAmount += price * product.quantity
+    })
+    order.totalAmount = totalAmount
+    await order.save()
+
+    console.log(order)
+    res.status(200).json(order)
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ error: 'Internal server error.' })
+  }
+})
+
+router.post(
+  '/cart/add',
+  asyncHandler(async (req, res) => {
+    const { email, productId, quantity } = req.body
+
+    const user = await User.findOne({ email })
+
+    if (user) {
+      // Find or create the user's wishlist (Order in this case)
+      let cart = await Order.findOne({ user: user._id })
+      if (!cart) {
+        cart = new Order({ user: user._id, products: [] })
+      }
+
+      // Check if the product is already in the wishlist
+      const existingProduct = cart.products.find(
+        (item) => item.product.toString() === productId
+      )
+
+      if (!existingProduct) {
+        // Add the product to the wishlist
+        const newProduct = {
+          product: productId,
+          quantity,
+        }
+        cart.products.push(newProduct)
+        await cart.save()
+        res.status(200).send('Product added to cart.')
+      } else {
+        res.status(409).send('Product is already in cart.')
+      }
+    } else {
+      res.status(404).send('User not found')
+    }
+  })
+)
+
+router.get(
+  '/address/:email',
+  asyncHandler(async (req, res) => {
+    const { email } = req.params
+
+    const user = await User.findOne({ email })
+
+    res.send(user.address)
+  })
+)
+
 module.exports = router
-
-/*
-
-  Done:
-  ✅ POST - Account creation
-  ✅ POST - Login
-  ✅ POST(s) - Email verification
-  ✅ POST (api/wishlist/add)
-
-  TODO's:
-  -> ✅ GET (api/products) - products (image, name, price, discount, reviews)
-     ✅GET (api/products?category=xxx)
-     ✅GET (api/products?priceMin=xxx&priceMax=xxx)
-     ✅GET (api/products?name=xxx) aka. search
-
-  -> GET (api/orderHistory)
-  -> GET (api/orderHistory)
-
-  -> POST (api/order)
-*/

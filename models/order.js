@@ -18,15 +18,13 @@ const orderSchema = new Schema({
   ],
   totalAmount: {
     type: Number,
-    required: true,
   },
   shippingAddress: {
     type: String,
-    required: true,
   },
   status: {
     type: String,
-    required: true,
+    default: 'new',
   },
 })
 
