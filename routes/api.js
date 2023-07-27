@@ -728,4 +728,100 @@ router.get(
   })
 )
 
+router.post(
+  '/address/:email/new',
+  asyncHandler(async (req, res) => {
+    console.log('hi')
+    const { email } = req.params
+    const data = req.body
+
+    try {
+      const user = await User.findOne({ email })
+
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' })
+      }
+
+      const newAddress = {
+        name: data.name,
+        address: data.address,
+        city: data.city,
+        state: data.state,
+        pin: data.pin,
+        phone: data.phone,
+      }
+
+      user.address.push(newAddress)
+
+      await user.save()
+
+      return res
+        .status(200)
+        .json({ message: 'Address added successfully', user })
+    } catch (error) {
+      console.error(error)
+      return res.status(500).json({ error: 'Server error' })
+    }
+  })
+)
+
+router.get(
+  '/account/:email/edit',
+  asyncHandler(async (req, res) => {
+    const { email } = req.params
+    const { address } = req.query
+
+    const user = await User.findOne({ email })
+
+    user.address.map((addr) => {
+      if (addr._id.toString() === address) {
+        res.send(addr)
+        return
+      }
+    })
+  })
+)
+
+router.put(
+  '/address/:email/update',
+  asyncHandler(async (req, res) => {
+    const { email } = req.params
+    const { id } = req.query
+
+    const data = req.body
+
+    try {
+      const user = await User.findOne({ email })
+
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' })
+      }
+
+      const addressIndex = user.address.findIndex(
+        (addr) => addr._id.toString() === id
+      )
+
+      if (addressIndex === -1) {
+        return res.status(404).json({ error: 'Address not found' })
+      }
+
+      // Update the address properties with the new data
+      user.address[addressIndex].name = data.name
+      user.address[addressIndex].address = data.address
+      user.address[addressIndex].city = data.city
+      user.address[addressIndex].state = data.state
+      user.address[addressIndex].pin = data.pin
+      user.address[addressIndex].phone = data.phone
+
+      await user.save()
+      return res
+        .status(200)
+        .json({ message: 'Address added successfully', user })
+    } catch (error) {
+      console.error(error)
+      return res.status(500).json({ error: 'Server error' })
+    }
+  })
+)
+
 module.exports = router
