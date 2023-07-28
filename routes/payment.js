@@ -5,6 +5,7 @@ const crypto = require('crypto')
 const router = express.Router()
 
 const Order = require('../models/order')
+const User = require('../models/user')
 
 router.post('/orders', async (req, res) => {
   try {
@@ -41,9 +42,22 @@ router.post('/verify', async (req, res) => {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
       req.body
 
-    const { orderId } = req.query
+    const { orderId, addressId, email } = req.query
 
+    const user = await User.findOne({ email })
     const order = await Order.findOne({ _id: orderId })
+    const address = user.address.find(
+      (addr) => addr._id.toString() === addressId
+    )
+
+    const shippingAddress = {
+      name: address.name,
+      address: address.address,
+      city: address.city,
+      state: address.state,
+      pin: address.pin,
+      phone: address.phone,
+    }
 
     const sign = razorpay_order_id + '|' + razorpay_payment_id
     const expectedSign = crypto
@@ -53,6 +67,7 @@ router.post('/verify', async (req, res) => {
 
     if (razorpay_signature === expectedSign) {
       order.status = 'paid'
+      order.shippingAddress = shippingAddress
       order.razorpay_order_id = razorpay_order_id
       order.razorpay_payment_id = razorpay_payment_id
       order.razorpay_signature = razorpay_signature

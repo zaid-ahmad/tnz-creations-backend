@@ -20,7 +20,12 @@ const orderSchema = new Schema({
     type: Number,
   },
   shippingAddress: {
-    type: String,
+    name: { type: String },
+    address: { type: String },
+    city: { type: String },
+    state: { type: String },
+    pin: { type: String },
+    phone: { type: String },
   },
   status: {
     type: String,
