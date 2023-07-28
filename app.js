@@ -17,6 +17,7 @@ require('dotenv').config()
 const indexRouter = require('./routes/index')
 const categoryRouter = require('./routes/category')
 const apiRouter = require('./routes/api')
+const paymentRoute = require('./routes/payment')
 
 const Admin = require('./models/admin')
 const Product = require('./models/product')
@@ -141,6 +142,7 @@ app.post('/login', (req, res, next) => {
 
 app.use('/category', categoryRouter)
 app.use('/api', apiRouter)
+app.use('/payment', paymentRoute)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

@@ -2,8 +2,7 @@ const express = require('express')
 const asyncHandler = require('express-async-handler')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const path = require('path')
-const fs = require('fs')
+
 const router = express.Router()
 
 const Category = require('../models/category')
@@ -161,8 +160,6 @@ router.post('/verify-otp', async (req, res) => {
 
   try {
     const user = await User.findOne({ email: email })
-
-    console.log(user)
 
     if (!user) {
       return res.sendStatus(403)
@@ -491,7 +488,6 @@ router.delete('/order/remove-product/:product_id', async (req, res) => {
       return res.status(404).json({ error: 'Order not found' })
     }
 
-    console.log('Product Params ID:', product_id)
     // Find the index of the product in the order's products array
     const productIndex = order.products.findIndex(
       (product) => product.product._id.toString() === product_id
@@ -503,8 +499,6 @@ router.delete('/order/remove-product/:product_id', async (req, res) => {
 
     // Calculate the price of the product to be removed
     const productToRemove = order.products[productIndex]
-
-    console.log(productToRemove)
 
     const priceOfProductToRemove =
       productToRemove.product.price -
@@ -536,19 +530,24 @@ router.get(
     const user = await User.findOne({ email })
     const userId = user._id
 
-    const cart_items = await Order.find({ user: userId })
-    const cart_products_ids_array = cart_items[0].products
+    const cart_items = await Order.find({ user: userId, status: 'new' })
+    console.log(cart_items)
+    if (cart_items.length > 0) {
+      const cart_products_ids_array = cart_items[0].products
 
-    if (cart_products_ids_array.length > 0) {
-      const products = await Promise.all(
-        cart_products_ids_array.map(async (product_id) => {
-          const product = await Product.findOne({ _id: product_id.product })
-          return product
-        })
-      )
-      res.send(products)
+      if (cart_products_ids_array.length > 0) {
+        const products = await Promise.all(
+          cart_products_ids_array.map(async (product_id) => {
+            const product = await Product.findOne({ _id: product_id.product })
+            return product
+          })
+        )
+        res.send(products)
+      } else {
+        res.sendSatus(404)
+      }
     } else {
-      res.status(404).send('Your cart will appear here...')
+      res.status(400).send('Your cart is empty')
     }
   })
 )
@@ -672,7 +671,6 @@ router.patch('/cart/:product_id/update-quantity', async (req, res) => {
     order.totalAmount = totalAmount
     await order.save()
 
-    console.log(order)
     res.status(200).json(order)
   } catch (error) {
     console.error(error)
@@ -689,9 +687,9 @@ router.post(
 
     if (user) {
       // Find or create the user's wishlist (Order in this case)
-      let cart = await Order.findOne({ user: user._id })
+      let cart = await Order.findOne({ user: user._id, status: 'new' })
       if (!cart) {
-        cart = new Order({ user: user._id, products: [] })
+        cart = new Order({ user: user._id, products: [], status: 'new' })
       }
 
       // Check if the product is already in the wishlist
@@ -731,7 +729,6 @@ router.get(
 router.post(
   '/address/:email/new',
   asyncHandler(async (req, res) => {
-    console.log('hi')
     const { email } = req.params
     const data = req.body
 
