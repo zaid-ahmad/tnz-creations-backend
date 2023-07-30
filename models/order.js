@@ -14,6 +14,7 @@ const orderSchema = new Schema({
         type: Number,
         required: true,
       },
+      color: { type: String, required: true },
     },
   ],
   totalAmount: {
@@ -34,6 +35,7 @@ const orderSchema = new Schema({
   razorpay_order_id: { type: String },
   razorpay_payment_id: { type: String },
   razorpay_signature: { type: String },
+  date_placed: { type: String },
 })
 
 module.exports = mongoose.model('Order', orderSchema)

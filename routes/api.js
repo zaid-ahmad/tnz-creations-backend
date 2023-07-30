@@ -531,21 +531,15 @@ router.get(
     const userId = user._id
 
     const cart_items = await Order.find({ user: userId, status: 'new' })
-    console.log(cart_items)
-    if (cart_items.length > 0) {
-      const cart_products_ids_array = cart_items[0].products
+      .populate('products.product')
+      .exec()
 
-      if (cart_products_ids_array.length > 0) {
-        const products = await Promise.all(
-          cart_products_ids_array.map(async (product_id) => {
-            const product = await Product.findOne({ _id: product_id.product })
-            return product
-          })
-        )
-        res.send(products)
-      } else {
-        res.sendSatus(404)
-      }
+    if (cart_items.length > 0) {
+      let products = []
+      cart_items[0].products.map((product) => {
+        products.push(product)
+      })
+      res.send(products)
     } else {
       res.status(400).send('Your cart is empty')
     }
@@ -622,10 +616,12 @@ router.get('/cart/:product_id/quantity', async (req, res) => {
   }
 })
 
-router.patch('/cart/:product_id/update-quantity', async (req, res) => {
+router.put('/cart/:product_id/update-quantity', async (req, res) => {
   try {
     const { product_id } = req.params
-    const { quantity, email } = req.body
+    const { quantity, email, color } = req.body // Include 'color' from req.body
+
+    console.log(quantity)
 
     const user = await User.findOne({ email })
     const userId = user._id
@@ -634,13 +630,15 @@ router.patch('/cart/:product_id/update-quantity', async (req, res) => {
       return res.status(400).json({ error: 'Invalid quantity value.' })
     }
 
+    // Update the 'quantity' and 'color' for the product in the order
     const order = await Order.findOneAndUpdate(
       {
         user: userId,
         'products.product': product_id,
+        status: 'new',
       },
       {
-        $set: { 'products.$.quantity': quantity },
+        $set: { 'products.$.quantity': quantity, 'products.$.color': color }, // Include 'color' in the update
       },
       {
         new: true,
@@ -652,15 +650,7 @@ router.patch('/cart/:product_id/update-quantity', async (req, res) => {
       return res.status(404).json({ error: 'Order not found.' })
     }
 
-    const productToUpdate = order.products.find(
-      (product) => product.product._id.toString() === product_id
-    )
-
-    if (!productToUpdate) {
-      return res.status(404).json({ error: 'Product not found in order.' })
-    }
-
-    // Recalculate totalAmount for the order (optional, you can also update it separately)
+    // Calculate the totalAmount for the order
     let totalAmount = 0
     order.products.forEach((product) => {
       const price =
@@ -668,6 +658,8 @@ router.patch('/cart/:product_id/update-quantity', async (req, res) => {
         (product.product.discount / 100) * product.product.price
       totalAmount += price * product.quantity
     })
+
+    // Update the 'totalAmount' for the order
     order.totalAmount = totalAmount
     await order.save()
 
@@ -681,7 +673,7 @@ router.patch('/cart/:product_id/update-quantity', async (req, res) => {
 router.post(
   '/cart/add',
   asyncHandler(async (req, res) => {
-    const { email, productId, quantity } = req.body
+    const { email, productId, quantity, color } = req.body
 
     const user = await User.findOne({ email })
 
@@ -702,6 +694,7 @@ router.post(
         const newProduct = {
           product: productId,
           quantity,
+          color,
         }
         cart.products.push(newProduct)
         await cart.save()
@@ -820,5 +813,25 @@ router.put(
     }
   })
 )
+
+router.get('/:product_id/color', async (req, res) => {
+  const { product_id } = req.params
+
+  const product = await Product.findOne({ _id: product_id })
+
+  res.send(product.colors)
+})
+
+router.get('/:email/orders', async (req, res) => {
+  const { email } = req.params
+
+  const user = await User.findOne({ email })
+
+  const orders = await Order.find({ user: user._id, status: 'paid' })
+    .populate('products.product')
+    .exec()
+
+  res.send(orders)
+})
 
 module.exports = router
