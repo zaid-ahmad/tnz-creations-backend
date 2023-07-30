@@ -426,7 +426,7 @@ router.get(
       )
       res.send(products)
     } else {
-      res.status(404).send('All your wishlisted products will appear here...')
+      res.status(404).send('Products you wishlist will appear here...')
     }
   })
 )
@@ -579,7 +579,7 @@ router.get(
 
       res.send(updatedOrderSummary)
     } else {
-      res.status(404).send('No orders found.')
+      res.status(404).send('cart empty')
     }
   })
 )
