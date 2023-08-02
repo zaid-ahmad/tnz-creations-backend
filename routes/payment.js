@@ -12,9 +12,11 @@ router.post('/orders', async (req, res) => {
     const { productId } = req.body
 
     const orderData = await Order.findOne({ _id: productId })
-    const amount = parseInt(
-      orderData.totalAmount * 0.18 + orderData.totalAmount
+    const orderAmount = parseInt(
+      Math.floor(orderData.totalAmount * 0.18) + orderData.totalAmount
     )
+
+    console.log(orderAmount)
 
     const instance = new Razorpay({
       key_id: process.env.RAZORPAY_KEY_ID,
@@ -22,7 +24,7 @@ router.post('/orders', async (req, res) => {
     })
 
     const options = {
-      amount: amount * 100,
+      amount: orderAmount * 100,
       currency: 'INR',
     }
 
@@ -44,7 +46,7 @@ router.post('/verify', async (req, res) => {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
       req.body
 
-    const { orderId, addressId, email } = req.query
+    const { orderId, addressId, email, shippingCharges } = req.query
 
     const user = await User.findOne({ email })
     const order = await Order.findOne({ _id: orderId })
@@ -69,6 +71,7 @@ router.post('/verify', async (req, res) => {
 
     if (razorpay_signature === expectedSign) {
       order.status = 'paid'
+      order.totalAmount = order.totalAmount + parseInt(shippingCharges)
       order.date_placed = new Date()
       order.shippingAddress = shippingAddress
       order.razorpay_order_id = razorpay_order_id

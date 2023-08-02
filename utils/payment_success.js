@@ -1,12 +1,7 @@
-const crypto = require('crypto')
 const nodemailer = require('nodemailer')
-const otpTemplate = require('../email/otp')
+const paymentSuccessfulTemplate = require('../email/payment-successful')
 
-const generateOTP = () => {
-  return crypto.randomBytes(3).toString('hex')
-}
-
-const sendOTP = (email, OTP) => {
+const sendPaymentSuccessMail = (email) => {
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -15,14 +10,16 @@ const sendOTP = (email, OTP) => {
     },
   })
 
+  let link = 'http://localhost:5173/account/orders'
+
   const mailOptions = {
     from: {
       name: 'TNZ Creations',
       address: process.env.EMAIL_SERVICE_USER,
     },
     to: email,
-    subject: 'Email Verification - TNZ Creations',
-    html: otpTemplate(OTP),
+    subject: 'Payment Successful - TNZ Creations',
+    html: paymentSuccessfulTemplate(link),
   }
 
   transporter.sendMail(mailOptions, (error, info) => {
@@ -34,4 +31,4 @@ const sendOTP = (email, OTP) => {
   })
 }
 
-module.exports = { generateOTP, sendOTP }
+module.exports = { sendPaymentSuccessMail }

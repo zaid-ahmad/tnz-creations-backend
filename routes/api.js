@@ -11,6 +11,8 @@ const Wishlist = require('../models/wishlist')
 const Order = require('../models/order')
 const Product = require('../models/product')
 const { generateOTP, sendOTP } = require('../utils/otp')
+const { sendResetMail } = require('../utils/password_reset')
+const { sendPaymentSuccessMail } = require('../utils/payment_success')
 
 require('dotenv').config()
 
@@ -150,7 +152,7 @@ router.get(
         }
       }
     } else {
-      res.sendStatus(401) // No token provided
+      res.sendStatus(401).send('Something went wrong!') // No token provided
     }
   })
 )
@@ -219,6 +221,32 @@ router.post('/verify-otp', async (req, res) => {
     res.status(500).send('Server error')
   }
 })
+
+router.post(
+  '/password/reset/:email',
+  asyncHandler(async (req, res) => {
+    const { email } = req.params
+    let user = await User.findOne({ email })
+    if (!user) {
+      res.sendStatus(403)
+    }
+    sendResetMail(email)
+    res.status(200).send('Reset Password Mail Sent Successfully')
+  })
+)
+
+router.post(
+  '/paymentSucess/:email',
+  asyncHandler(async (req, res) => {
+    const { email } = req.params
+    let user = await User.findOne({ email })
+    if (!user) {
+      res.sendStatus(403)
+    }
+    sendPaymentSuccessMail(email)
+    res.status(200).send('Payment Success Mail Sent Successfully')
+  })
+)
 
 // api/generate-otp/:email
 router.post(
@@ -318,7 +346,6 @@ router.post(
       if (user.OTP == undefined) {
         bcrypt.compare(password, user.password, (err, isMatch) => {
           if (err) {
-            console.error('Error:', err)
             return
           }
 
@@ -336,6 +363,8 @@ router.post(
             res.status(401).send('Incorrect email/password')
           }
         })
+      } else {
+        res.send(400).send('OTP exists.')
       }
     } else {
       res
@@ -833,5 +862,43 @@ router.get('/:email/orders', async (req, res) => {
 
   res.send(orders)
 })
+
+router.get(
+  '/search',
+  asyncHandler(async (req, res) => {
+    const { searchQuery } = req.query
+
+    // Search for products matching the name
+    const products = await Product.find({
+      name: { $regex: searchQuery, $options: 'i' }, // Case-insensitive search using $regex
+    }).exec()
+
+    // Search for categories matching the name
+    const categories = await Category.find({
+      name: { $regex: searchQuery, $options: 'i' }, // Case-insensitive search using $regex
+    }).exec()
+
+    // Combine the results
+    const results = {
+      products,
+      categories,
+    }
+
+    if (categories.length > 0) {
+      // Extract category IDs from the found categories
+      const categoryIds = categories.map((category) => category._id)
+
+      // Search for products that belong to the found categories
+      const categoryProducts = await Product.find({
+        category: { $in: categoryIds }, // Find products with category IDs in the categoryIds array
+      }).exec()
+
+      // Add the products from categories to the results
+      results.categoryProducts = categoryProducts
+    }
+
+    res.status(200).json(results)
+  })
+)
 
 module.exports = router

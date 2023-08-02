@@ -1,12 +1,7 @@
-const crypto = require('crypto')
 const nodemailer = require('nodemailer')
-const otpTemplate = require('../email/otp')
+const passwordResetTemplate = require('../email/password-reset')
 
-const generateOTP = () => {
-  return crypto.randomBytes(3).toString('hex')
-}
-
-const sendOTP = (email, OTP) => {
+const sendResetMail = (email) => {
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -15,14 +10,16 @@ const sendOTP = (email, OTP) => {
     },
   })
 
+  let link = 'https://www.google.com'
+
   const mailOptions = {
     from: {
       name: 'TNZ Creations',
       address: process.env.EMAIL_SERVICE_USER,
     },
     to: email,
-    subject: 'Email Verification - TNZ Creations',
-    html: otpTemplate(OTP),
+    subject: 'Reset Your Password - TNZ Creations',
+    html: passwordResetTemplate(link),
   }
 
   transporter.sendMail(mailOptions, (error, info) => {
@@ -34,4 +31,4 @@ const sendOTP = (email, OTP) => {
   })
 }
 
-module.exports = { generateOTP, sendOTP }
+module.exports = { sendResetMail }
