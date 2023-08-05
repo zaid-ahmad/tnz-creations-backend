@@ -4,7 +4,7 @@ const asyncHandler = require('express-async-handler')
 
 exports.orders_get = asyncHandler(async (req, res) => {
   const allOrders = await Order.find({ status: 'paid' })
-    .populate('products.product')
+    .populate('products.product.product')
     .sort({ date_placed: -1 })
     .exec()
 

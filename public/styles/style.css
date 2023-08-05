@@ -581,35 +581,45 @@ td {
 /* ORDERS STYLE */
 
 .orders-container {
+  margin-top: 1.25rem;
   background: #fff;
-  border-radius: 0.25rem;
-  border: 1px solid rgb(113 113 122 / 1);
   margin-bottom: 1.25rem;
 }
 
 .orders {
   padding: 1.5rem;
+  border-radius: 0.25rem;
+  border: 1px solid rgb(113 113 122 / 1);
 }
 
 .oflex-container {
   display: flex;
-  align-items: center;
-  gap: 2.5rem;
+  align-items: start;
+  gap: 2rem;
+}
+
+.something1,
+.something2 {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .order-info {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: start;
   gap: 0.25rem;
 }
 
-.order-info h2 {
+.order-info h2,
+.shipping-address h2 {
   font-size: 1rem;
   font-weight: 600;
 }
 
-.order-info p {
+.order-info p,
+.shipping-address p {
   font-size: 0.875rem;
   line-height: 1.25rem;
   color: rgb(113 113 122 / 1);
@@ -617,7 +627,9 @@ td {
 }
 
 .order-info form {
+  margin-top: 0.235rem;
   display: flex;
+  flex-direction: column;
   gap: 0.25rem;
   justify-content: center;
 }
@@ -629,7 +641,7 @@ td {
 
 .order-info form button {
   border: none;
-  background: #313131;
+  background: #3f3f3f;
   padding: 0.375rem 0.625rem;
   color: #f1f2f6;
   border-radius: 6px;
@@ -641,26 +653,19 @@ td {
   background-color: #000;
 }
 
+.shipping-address {
+  margin-top: 1rem;
+}
+
 /* PRODUCT STYLING */
-/* CSS code */
-.grid-container {
-  display: grid;
-}
-
-.grid-cols-2 {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.product-list {
+.order-product-list {
   margin-top: 1.25rem;
+  display: flex;
+  gap: 2rem;
 }
 
 .flex {
   display: flex;
-}
-
-.flex-gap > * + * {
-  margin-top: 0.5rem;
 }
 
 .my-3 {
@@ -685,4 +690,10 @@ td {
 .text-sm {
   font-size: 0.875rem;
   line-height: 1.25rem;
+}
+
+.orders .grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  gap: 2rem;
 }
