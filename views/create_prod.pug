@@ -2,7 +2,7 @@ extends layout
 
 block content 
 
-    a(href="/category/products" id="goback") <- Go back
+    a(href="/inventory/products" id="goback") <- Go back
 
     h1 Add a Product to the Inventory
 
@@ -38,7 +38,7 @@ block content
                             label(for="img") Upload image
                                 span(id='req') * 
                         .inp-img
-                            input(type="file", name="image", id='img')
+                            input(type="file", name="images", id='img' multiple=true)
 
                 .price-inp.inp
                     label(for="price") Price

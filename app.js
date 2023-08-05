@@ -15,9 +15,10 @@ const helmet = require('helmet')
 require('dotenv').config()
 
 const indexRouter = require('./routes/index')
-const categoryRouter = require('./routes/category')
+const inventoryRouter = require('./routes/inventory')
 const apiRouter = require('./routes/api')
 const paymentRoute = require('./routes/payment')
+const ordersRouter = require('./routes/orders')
 
 const Admin = require('./models/admin')
 const Product = require('./models/product')
@@ -135,12 +136,13 @@ app.post('/login', (req, res, next) => {
         return next(err)
       }
       // Redirect to a different page
-      return res.redirect('/category/products/')
+      return res.redirect('/inventory/products/')
     })
   })(req, res, next)
 })
 
-app.use('/category', categoryRouter)
+app.use('/inventory', inventoryRouter)
+app.use('/orders', ordersRouter)
 app.use('/api', apiRouter)
 app.use('/payment', paymentRoute)
 

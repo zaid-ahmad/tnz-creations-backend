@@ -152,7 +152,8 @@ router.get(
         }
       }
     } else {
-      res.sendStatus(401).send('Something went wrong!') // No token provided
+      console.log('NO TOKEN PROVIDED')
+      res.status(401).send('No token provided') // No token provided
     }
   })
 )
@@ -350,15 +351,11 @@ router.post(
           }
 
           if (isMatch) {
-            const token = jwt.sign(
-              { email: user.email },
-              process.env.SECRET_KEY,
-              {
-                expiresIn: '1d',
-              }
-            )
+            const token = jwt.sign({ email: user.email }, jwtSecret, {
+              expiresIn: '1d',
+            })
             res.cookie('token', token, { httpOnly: true })
-            res.send('Login successful')
+            res.sendStatus(200)
           } else {
             res.status(401).send('Incorrect email/password')
           }

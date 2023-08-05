@@ -8,22 +8,27 @@ block content
         p= message
 
     .semi-header
-      a(href="/category/products/create")
+      a(href="/inventory/products/create")
         .add-prod-btn.link-btn
           p(id="plus") +
           p Add Product
 
-      a(href="/category/new")
+      a(href="/inventory/new")
         .add-cat-btn.link-btn
           p(id="plus") +
           p(style="width: 13.5rem") Create new category
+
+      a(href="/orders")
+        .view-orders-btn.link-btn 
+            p(style="width: 13.5rem") View all orders
+            p(id="plus") &rarr;
 
     if products_list 
         - const numberOfProds = products_list.length 
 
         .sort-drop 
             form(action="" method='POST') 
-                select(type='select' placeholder='Filter by category' name='category')
+                select(type='select' placeholder='Filter by category' name='category' style="padding: 0.7rem")
                     option(value="all") All Categories 
                     each cat in category
                         if cat
@@ -41,7 +46,7 @@ block content
             for product in products_list 
                 .product
                     .prod-img
-                        img(src=`/images/uploads/${product.image}`, alt="Image")
+                        img(src=`/images/uploads/${product.images[0]}`, alt="Image")
                     .prod-info
                         .col1
                             .product-name.product-attr
@@ -73,7 +78,7 @@ block content
                                         span(id='color') #{color}
                         
                         .span(colspan='2')
-                            a(href=`/category/products/${product._id}`)
+                            a(href=`/inventory/products/${product._id}`)
                                 .details-btn
                                     p View More 
                             

@@ -1,0 +1,49 @@
+extends layout 
+
+block content
+    a(href="/inventory/products" id="goback") <- Go back
+
+    h2 View all orders
+
+    each order in orders
+        - const dateObj = new Date(order.date_placed)
+        - const options = { month: 'short', day: 'numeric', year: 'numeric' }
+        - const formattedDate = dateObj.toLocaleDateString('en-US', options)
+        .orders-container
+            .orders 
+                .oflex-container 
+                    .order-number.order-info
+                        h2 Order number 
+                        p #{order.razorpay_order_id.split('_')[1]} 
+
+                    .order-date.order-info
+                        h2 Placed on
+                        p #{formattedDate} 
+
+                    .order-amount.order-info
+                        h2 Total amount
+                        p ₹#{order.totalAmount}  
+
+                    .order-status.order-info 
+                        h2 Change order status 
+                        form(action='/changeOrderInfo' method='post')
+                            select(name='orderStatus')
+                                option(value='shipped') Set Status
+                                option(value='shipped') Shipped
+                                option(value='delivered') Delivered
+                            button(type='submit') Update
+            
+                .grid-container.grid-cols-2.product-list
+                    each product, index in order.products
+                        p #{product}
+                        //- .product-item.flex.flex-gap.my-3
+                        //- img.product-image(src=product.product.images[0] class='product-thumbnail')
+                        //- .product-details.flex.flex-col
+                        //- h4.product-name.text-md #{product.product.name}
+                        //- .product-info.mt-2
+                        //-     p.product-color.text-gray-500.text-sm Color: #{product.color}
+                        //-     p.product-price.text-gray-500.text-sm Price: ₹#{product.product.price}
+                        //-     p.product-quantity.text-gray-500.text-sm Quantity: #{product.quantity}
+
+
+                

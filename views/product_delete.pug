@@ -2,13 +2,13 @@ extends layout
 
 block content
 
-    a(href="/category/products" id="goback") <- Go back
+    a(href="/inventory/products" id="goback") <- Go back
 
     .cont
         .product-container
             .one
                 .prod-det-img 
-                    img(src=`/images/uploads/${image}`, alt=`Image of ${name}`)
+                    img(src=`/images/uploads/${images[0]}`, alt=`Image of ${name}`)
 
             .two
                 .prod-det-name
@@ -30,6 +30,12 @@ block content
                 .prod-det-description 
                     p Description 
                     span= description.charAt(0).toUpperCase() + description.slice(1)
+            
+                .prod-det-images 
+                    p Addtional Images 
+                    .extra-imgs 
+                        each image in images.slice(1)
+                            img(src=`/images/uploads/${image}`, alt="")
             .three
                 p Additional Information
 

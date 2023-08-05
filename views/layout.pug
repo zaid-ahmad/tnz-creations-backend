@@ -2,6 +2,7 @@ doctype html
 html
   head
     title TNZ Creations | Admin 
+    link(rel="icon" type="image/svg" href="/images/Logo.svg")
     link(rel='stylesheet', href='/styles/style.css')
 
     link(rel="preconnect" href="https://fonts.googleapis.com")
@@ -9,7 +10,7 @@ html
     link(href="https://fonts.googleapis.com/css2?family=Inter:wght@100;300;500;600;700;800;900&family=Merriweather" rel="stylesheet")
   body
     header 
-      a(href="/category/products")  
+      a(href="/inventory/products")  
         .logo
           img(src="/images/Logo.svg", alt="Logo")
           h1 TNZ Creations
@@ -19,4 +20,5 @@ html
     main 
       block content
 
+  script(src="https://kit.fontawesome.com/cad7eb31cb.js" crossorigin="anonymous")
   script(src="/javascripts/script.js") 
