@@ -111,6 +111,7 @@ const password_reset_template = (link) => {
           </p>
           <a class="button" href=${link}
           target='_blank'
+          style="text-decoration: none"
             >Reset Password</a
           >
           <p>If you did not request a password reset, please ignore this email.</p>

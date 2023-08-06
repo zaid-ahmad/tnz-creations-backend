@@ -119,6 +119,7 @@ const payment_successful_template = (link) => {
                 <td align="center">
                 <a class="button" href=${link}
           target='_blank'
+          style="text-decoration: none"
             >View Order Details</a
           >
                 </td>

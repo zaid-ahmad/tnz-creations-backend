@@ -12,7 +12,10 @@ const Order = require('../models/order')
 const Product = require('../models/product')
 const { generateOTP, sendOTP } = require('../utils/otp')
 const { sendResetMail } = require('../utils/password_reset')
-const { sendPaymentSuccessMail } = require('../utils/payment_success')
+const {
+  sendPaymentSuccessMail,
+  sendOrderEmailToAdmin,
+} = require('../utils/payment_success')
 
 require('dotenv').config()
 
@@ -245,6 +248,7 @@ router.post(
       res.sendStatus(403)
     }
     sendPaymentSuccessMail(email)
+    sendOrderEmailToAdmin()
     res.status(200).send('Payment Success Mail Sent Successfully')
   })
 )
