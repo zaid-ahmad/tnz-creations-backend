@@ -1,4 +1,4 @@
-const newOrder = (OTP) => {
+const newOrder = (link) => {
   return `
   <div
   style="
@@ -23,7 +23,7 @@ const newOrder = (OTP) => {
     </div>
     <p style="font-size: 1.1em">Hello Tausif!</p>
     <p>You have a new order! Here are the details-</p>
-    <a href="http://localhost:3000/" style="text-decoration: none">
+    <a href=${link} style="text-decoration: none">
       <div
         style="
           background: #bd2990;

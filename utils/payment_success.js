@@ -12,7 +12,6 @@ const sendPaymentSuccessMail = (email) => {
   })
 
   let link = 'http://localhost:5173/account/orders'
-  let adminLink = 'http://localhost:3000/orders'
 
   const mailOptions = {
     from: {
@@ -42,12 +41,15 @@ const sendOrderEmailToAdmin = () => {
     },
   })
 
+  let adminMailList = ['tausifahmadn3@gmail.com', 'tnzcreations1@gmail.com']
+  let adminLink = 'http://localhost:3000/orders'
+
   const mailOptions = {
     from: {
       name: 'TNZ Creations',
       address: process.env.EMAIL_SERVICE_USER,
     },
-    to: ['tausifahmadn3@gmail.com', 'tnzcreations1@gmail.com'],
+    to: adminMailList,
     subject: 'You have a new order 😀 - TNZ Creations',
     html: newOrderTemplate(adminLink),
   }
