@@ -10,4 +10,10 @@ function ensureAuthenticated(req, res, next) {
 
 router.get('/', ensureAuthenticated, orders_controller.orders_get)
 
+router.post(
+  '/changeOrderStatus/:orderId',
+  ensureAuthenticated,
+  orders_controller.change_order_status
+)
+
 module.exports = router

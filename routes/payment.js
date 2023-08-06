@@ -9,14 +9,14 @@ const User = require('../models/user')
 
 router.post('/orders', async (req, res) => {
   try {
-    const { productId } = req.body
+    const { productId, shippingCharges } = req.body
 
     const orderData = await Order.findOne({ _id: productId })
-    const orderAmount = parseInt(
-      Math.floor(orderData.totalAmount * 0.18) + orderData.totalAmount
+    const orderAmount = Number(
+      Math.ceil(orderData.totalAmount * 0.18) +
+        orderData.totalAmount +
+        shippingCharges
     )
-
-    console.log(orderAmount)
 
     const instance = new Razorpay({
       key_id: process.env.RAZORPAY_KEY_ID,
@@ -71,7 +71,11 @@ router.post('/verify', async (req, res) => {
 
     if (razorpay_signature === expectedSign) {
       order.status = 'paid'
-      order.totalAmount = order.totalAmount + parseInt(shippingCharges)
+      order.totalAmount = Number(
+        Math.ceil(order.totalAmount * 0.18) +
+          order.totalAmount +
+          shippingCharges
+      )
       order.date_placed = new Date()
       order.shippingAddress = shippingAddress
       order.razorpay_order_id = razorpay_order_id

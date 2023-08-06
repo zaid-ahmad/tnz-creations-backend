@@ -853,7 +853,7 @@ router.get('/:email/orders', async (req, res) => {
 
   const user = await User.findOne({ email })
 
-  const orders = await Order.find({ user: user._id, status: 'paid' })
+  const orders = await Order.find({ user: user._id, status: { $ne: 'new' } })
     .populate('products.product')
     .exec()
 

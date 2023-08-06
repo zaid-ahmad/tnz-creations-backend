@@ -33,13 +33,18 @@ block content
                                     p #{formattedDate} 
                                 .order-number.order-info
                                     h2 Order number 
-                                    p #{order.razorpay_order_id.split('_')[1]}     
+                                    p #{order.razorpay_order_id.split('_')[1]}    
+
+                                .order-number.order-info
+                                    h2 Order status 
+                                    - const order_status = order.status.charAt(0).toUpperCase() + order.status.slice(1);
+                                    p #{order_status}
 
                     .div2 
                         .order-product-list
                             each product, index in order.products
-                                .product-item.flex.flex-gap.my-3
-                                    img.product-image(src='/images/uploads/product.product.images[0]' class='product-thumbnail' alt=`product image`)
+                                .order-product-item.flex.flex-gap.my-3
+                                    img.product-image(src=`/images/uploads/${product.product.images[0]}` class='product-thumbnail' alt=`product image`)
                                     .product-details.flex.flex-col
                                     h4.product-name.text-md #{product.product.name}
                                     .product-info.mt-2
@@ -50,9 +55,9 @@ block content
                     .div3 
                         .order-status.order-info 
                             h2 Change order status 
-                            form(action='/changeOrderInfo' method='post')
+                            form(action=`orders/changeOrderStatus/${order._id}` method='post')
                                 select(name='orderStatus')
                                     option(value='select') Select
                                     option(value='shipped') Shipped
                                     option(value='delivered') Delivered
-                                button(type='submit') Update
+                                button(type='submit') Update 
