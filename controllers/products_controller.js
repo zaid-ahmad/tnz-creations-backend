@@ -77,6 +77,7 @@ exports.product_detail_get = asyncHandler(async (req, res) => {
 exports.product_create_get = asyncHandler(async (req, res, next) => {
   const [allCategories] = await Promise.all([Category.find().exec()])
   res.render('create_prod', {
+    context: '',
     category: allCategories,
   })
 })
@@ -94,6 +95,7 @@ exports.product_update_get = asyncHandler(async (req, res) => {
   }
 
   res.render('create_prod', {
+    context: 'update',
     product: product,
     category: allCategories,
   })
@@ -271,7 +273,7 @@ exports.product_update_post = [
       _id: req.params.id,
     })
 
-    if (req.files) {
+    if (req.files.length > 0) {
       // An image was uploaded
       req.files.map((file) => {
         product.images.push(file.filename)

@@ -9,59 +9,60 @@ block content
             .one
                 .prod-det-img 
                     img(src=`/images/uploads/${images[0]}`, alt=`Image of ${name}`)
+            
+            .pdtlcont
+                .two
+                    .prod-det-name
+                        p Name
+                        h1= name.charAt(0).toUpperCase() + name.slice(1)
 
-            .two
-                .prod-det-name
-                    p Name
-                    h1= name.charAt(0).toUpperCase() + name.slice(1)
+                    .prod-det-cat 
+                        p Category 
+                        span= category.name
 
-                .prod-det-cat 
-                    p Category 
-                    span= category.name
+                    .prod-det-price 
+                        p Price 
+                        span= price
 
-                .prod-det-price 
-                    p Price 
-                    span= price
+                    .prod-det-discount 
+                        p Discount (This data is for the website)
+                        span #{discount}%
 
-                .prod-det-discount 
-                    p Discount (This data is for the website)
-                    span #{discount}%
+                    .prod-det-description 
+                        p Description 
+                        span= description.charAt(0).toUpperCase() + description.slice(1)
 
-                .prod-det-description 
-                    p Description 
-                    span= description.charAt(0).toUpperCase() + description.slice(1)
+                    .prod-det-images 
+                        p Addtional Images 
+                        .extra-imgs 
+                            each image in images.slice(1)
+                                img(src=`/images/uploads/${image}`, alt="")
 
-                .prod-det-images 
-                    p Addtional Images 
-                    .extra-imgs 
-                        each image in images.slice(1)
-                            img(src=`/images/uploads/${image}`, alt="")
+                .three
+                    p Additional Information
 
-            .three
-                p Additional Information
+                    table
+                        tr
+                            td Colors 
+                            td= colors
+                        tr
+                            td Stock 
+                            td= stock
+                        tr
+                            td Weight 
+                            td #{weight} kg
+                        tr
+                            td Dimensions 
+                            td #{dimensions} cm
 
-                table
-                    tr
-                        td Colors 
-                        td= colors
-                    tr
-                        td Stock 
-                        td= stock
-                    tr
-                        td Weight 
-                        td #{weight} kg
-                    tr
-                        td Dimensions 
-                        td #{dimensions} cm
+                    .btns
+                        a(href=`/inventory/products/${id}/update`)
+                            .update-btn.action-btn
+                                h3 Update 
 
-                .btns
-                    a(href=`/inventory/products/${id}/update`)
-                        .update-btn.action-btn
-                            h3 Update 
-
-                    a(href=`/inventory/products/${id}/delete`)
-                        .delete-btn.action-btn
-                            h3 Delete
+                        a(href=`/inventory/products/${id}/delete`)
+                            .delete-btn.action-btn
+                                h3 Delete
 
 
         

@@ -10,6 +10,7 @@ exports.orders_get = asyncHandler(async (req, res) => {
 
   res.render('orders', {
     orders: allOrders,
+    filterValue: '',
   })
 })
 
@@ -20,4 +21,30 @@ exports.change_order_status = asyncHandler(async (req, res) => {
   await Order.findByIdAndUpdate(orderId, { status: orderStatus })
 
   res.redirect('/orders')
+})
+
+exports.filter_by_order_status = asyncHandler(async (req, res) => {
+  const { orderStatus } = req.body
+
+  if (orderStatus === 'all') {
+    const allOrders = await Order.find({ status: { $ne: 'new' } })
+      .populate('products.product')
+      .sort({ date_placed: -1 })
+      .exec()
+
+    res.render('orders', {
+      orders: allOrders,
+      filterValue: '',
+    })
+  } else {
+    const filteredOrders = await Order.find({ status: orderStatus })
+      .populate('products.product')
+      .sort({ date_placed: -1 })
+      .exec()
+
+    res.render('orders', {
+      orders: filteredOrders,
+      filterValue: orderStatus,
+    })
+  }
 })

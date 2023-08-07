@@ -9,6 +9,7 @@ function ensureAuthenticated(req, res, next) {
 }
 
 router.get('/', ensureAuthenticated, orders_controller.orders_get)
+router.post('/', ensureAuthenticated, orders_controller.filter_by_order_status)
 
 router.post(
   '/changeOrderStatus/:orderId',

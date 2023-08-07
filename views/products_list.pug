@@ -8,20 +8,23 @@ block content
         p= message
 
     .semi-header
-      a(href="/inventory/products/create")
-        .add-prod-btn.link-btn
-          p(id="plus") +
-          p Add Product
+        .div
+            a(href="/inventory/products/create")
+                .add-prod-btn.link-btn
+                    p(id="plus") +
+                    p Add Product
 
-      a(href="/inventory/new")
-        .add-cat-btn.link-btn
-          p(id="plus") +
-          p(style="width: 13.5rem") Create new category
+        .div
+            a(href="/inventory/new")
+                .add-cat-btn.link-btn
+                    p(id="plus") +
+                    p Create new category
 
-      a(href="/orders")
-        .view-orders-btn.link-btn 
-            p(style="width: 13.5rem") View all orders
-            p(id="plus") &rarr;
+        .div
+            a(href="/orders")
+                .view-orders-btn.link-btn 
+                    p View all orders
+                    p(id="plus") &rarr;
 
     if products_list 
         - const numberOfProds = products_list.length 
@@ -32,7 +35,7 @@ block content
                     option(value="all") All Categories 
                     each cat in category
                         if cat
-                            option(value=(cat._id)) #{cat.name}
+                            option(value=(cat._id) selected=(selectedCategory === cat.name)) #{cat.name}
                 
                 button Filter
         
@@ -41,7 +44,7 @@ block content
         else 
             if (selectedCategory === undefined) 
                 - selectedCategory = 'all'
-            h2(id='showing') Showing #{numberOfProds >= 1 ? numberOfProds : 1} Products #{selectedCategory == "all" ? "" : `in "${selectedCategory}" category`}
+            h3(id='showing') Showing #{numberOfProds >= 1 ? numberOfProds : 1} results
         .products-list 
             for product in products_list 
                 .product

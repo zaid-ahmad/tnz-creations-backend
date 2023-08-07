@@ -4,11 +4,31 @@ block content
     a(href="/inventory/products" id="goback") <- Go back
 
     h2 View all orders
+    .sort-drop 
+        form(action='' method='POST') 
+            if (filterValue.length > 0)
+                select(type='select' name='orderStatus' style="padding: 0.7rem")
+                    option(value="all") All
+                    option(value="paid" selected=(filterValue === 'paid')) Not Shipped
+                    option(value="shipped" selected=(filterValue === 'shipped')) Shipped
+                    option(value="delivered" selected=(filterValue === 'delivered')) Delivered
+
+            else 
+                select(type='select' name='orderStatus' style="padding: 0.7rem")
+                    option(value="all") All
+                    option(value="paid") Not Shipped
+                    option(value="shipped") Shipped
+                    option(value="delivered") Delivered
+                
+            button Filter
+
+    h4(style='margin-top: 2rem;') Showing #{orders.length} results
 
     each order in orders
         - const dateObj = new Date(order.date_placed)
         - const options = { month: 'short', day: 'numeric', year: 'numeric' }
         - const formattedDate = dateObj.toLocaleDateString('en-US', options)
+
         .orders-container
             .orders 
                 .grid-container
@@ -41,6 +61,8 @@ block content
                                     p #{order_status}
 
                     .div2 
+                        .order-info
+                            h2(id='prdsordrd') Products Ordered
                         .order-product-list
                             each product, index in order.products
                                 .order-product-item.flex.flex-gap.my-3
@@ -55,7 +77,7 @@ block content
                     .div3 
                         .order-status.order-info 
                             h2 Change order status 
-                            form(action=`orders/changeOrderStatus/${order._id}` method='post')
+                            form(action=`orders/changeOrderStatus/${order._id}` method='POST')
                                 select(name='orderStatus')
                                     option(value='select') Select
                                     option(value='shipped') Shipped

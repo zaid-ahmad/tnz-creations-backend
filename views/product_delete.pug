@@ -9,58 +9,62 @@ block content
             .one
                 .prod-det-img 
                     img(src=`/images/uploads/${images[0]}`, alt=`Image of ${name}`)
-
-            .two
-                .prod-det-name
-                    p Name
-                    h1= name.charAt(0).toUpperCase() + name.slice(1)
-
-                .prod-det-cat 
-                    p Category 
-                    span= category.name
-
-                .prod-det-price 
-                    p Price 
-                    span= price
-
-                .prod-det-discount 
-                    p Discount (This data is for the website)
-                    span= discount
-
-                .prod-det-description 
-                    p Description 
-                    span= description.charAt(0).toUpperCase() + description.slice(1)
             
-                .prod-det-images 
-                    p Addtional Images 
-                    .extra-imgs 
-                        each image in images.slice(1)
-                            img(src=`/images/uploads/${image}`, alt="")
-            .three
-                p Additional Information
+            .pdtlcont
+                .two
+                    .prod-det-name
+                        p Name
+                        h1= name.charAt(0).toUpperCase() + name.slice(1)
 
-                table
-                    tr
-                        td Colors 
-                        td= colors
-                    tr
-                        td Stock 
-                        td= stock
-                    tr
-                        td Weight 
-                        td #{weight} kg
-                    tr
-                        td Dimensions 
-                        td #{dimensions} cm
+                    .prod-det-cat 
+                        p Category 
+                        span= category.name
 
-                .btns
-                    .delete-form
-                        p Do you really want to delete this product?
-                        form(method='POST' action='')
-                            div.form-group
-                                input(type='hidden',name='id', required='true', value=product._id )
+                    .prod-det-price 
+                        p Price 
+                        span= price
 
-                            button.delete-btn.action-btn(type='submit') Delete
+                    .prod-det-discount 
+                        p Discount (This data is for the website)
+                        span #{discount}%
+
+                    .prod-det-description 
+                        p Description 
+                        span= description.charAt(0).toUpperCase() + description.slice(1)
+
+                    .prod-det-images 
+                        p Addtional Images 
+                        .extra-imgs 
+                            each image in images.slice(1)
+                                img(src=`/images/uploads/${image}`, alt="")
+
+                .three
+                    p Additional Information
+
+                    table
+                        tr
+                            td Colors 
+                            td= colors
+                        tr
+                            td Stock 
+                            td= stock
+                        tr
+                            td Weight 
+                            td #{weight} kg
+                        tr
+                            td Dimensions 
+                            td #{dimensions} cm
+
+                    .btns
+                        .delete-form
+                            p Do you really want to delete this product?
+                            form(method='POST' action='')
+                                div.form-group
+                                    input(type='hidden',name='id', required='true', value=product._id )
+
+                                button.delete-btn.action-btn(type='submit') Delete
+
+
         
 
          
