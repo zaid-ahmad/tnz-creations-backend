@@ -1,4 +1,4 @@
-# Inventory Application (under progress)
+# Backend for tnzcreations.com
 
 An easy to use IMS for my father's business.
 
