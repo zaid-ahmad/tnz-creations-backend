@@ -238,7 +238,7 @@ header h2 {
 .prod-img {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: start;
 }
 
 .product-attr {
@@ -413,9 +413,7 @@ select {
 
 .cat-img-cont {
   display: flex;
-  align-items: center;
-  justify-content: start;
-  gap: 5rem;
+  flex-direction: column;
 }
 
 .product-form select,
@@ -425,7 +423,7 @@ input[type='file'] {
 
 .product-form select {
   /* width: 12rem; */
-  width: 5rem;
+  width: 13rem;
   padding: 0.7rem;
 }
 
@@ -571,7 +569,7 @@ td {
   color: #000;
   margin-bottom: 1rem;
   margin-top: 1rem;
-  width: 16%;
+  width: 30%;
 }
 
 .btns button {
@@ -783,6 +781,11 @@ td {
     grid-template-columns: auto auto;
     gap: 10rem;
     margin-top: 2rem;
+  }
+
+  .cat-img-cont {
+    flex-direction: row;
+    gap: 5rem;
   }
 }
 
