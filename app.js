@@ -40,7 +40,7 @@ app.use(compression())
 app.use(helmet())
 app.use(
   cors({
-    origin: '*',
+    origin: 'https://tnzcreations.com',
     credentials: true, // Enable sending cookies in the response
   })
 )
