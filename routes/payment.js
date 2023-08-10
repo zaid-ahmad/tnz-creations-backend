@@ -12,10 +12,12 @@ router.post('/orders', async (req, res) => {
     const { productId, shippingCharges } = req.body
 
     const orderData = await Order.findOne({ _id: productId })
-    const orderAmount = Number(
-      Math.ceil(orderData.totalAmount * 0.18) +
-        orderData.totalAmount +
-        shippingCharges
+    const orderAmount = Math.ceil(
+      Number(
+        Math.ceil(orderData.totalAmount * 0.18) +
+          orderData.totalAmount +
+          shippingCharges
+      )
     )
 
     const instance = new Razorpay({
@@ -71,10 +73,12 @@ router.post('/verify', async (req, res) => {
 
     if (razorpay_signature === expectedSign) {
       order.status = 'paid'
-      order.totalAmount = Number(
-        Math.ceil(order.totalAmount * 0.18) +
-          order.totalAmount +
-          shippingCharges
+      order.totalAmount = Math.ceil(
+        Number(
+          Math.ceil(order.totalAmount * 0.18) +
+            order.totalAmount +
+            parseInt(shippingCharges)
+        )
       )
       order.date_placed = new Date()
       order.shippingAddress = shippingAddress
