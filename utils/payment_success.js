@@ -11,7 +11,7 @@ const sendPaymentSuccessMail = (email) => {
     },
   })
 
-  let link = 'http://localhost:5173/account/orders'
+  let link = 'https://tnzcreations.com/account/orders'
 
   const mailOptions = {
     from: {
