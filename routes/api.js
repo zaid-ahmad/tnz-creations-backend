@@ -347,7 +347,7 @@ router.post(
               expiresIn: '1d',
             })
             res.cookie('token', token, { httpOnly: true })
-            res.sendStatus(200)
+            res.redirect('https://tnzcreations.com')
           } else {
             res.status(401).send('Incorrect email/password')
           }
