@@ -89,7 +89,7 @@ router.post('/verify', async (req, res) => {
       await order.save()
 
       res.redirect(
-        `http://localhost:5173/paymentsuccess?reference=${razorpay_payment_id}`
+        `https://tnzcreations.com/paymentsuccess?reference=${razorpay_payment_id}`
       )
     } else {
       return res.status(400).json({ message: 'Invalid signature sent!' })
