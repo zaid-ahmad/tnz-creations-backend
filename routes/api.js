@@ -859,6 +859,7 @@ router.get('/:email/orders', async (req, res) => {
 
   const orders = await Order.find({ user: user._id, status: { $ne: 'new' } })
     .populate('products.product')
+    .sort({ date_placed: -1 })
     .exec()
 
   res.send(orders)

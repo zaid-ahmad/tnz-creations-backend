@@ -36,21 +36,14 @@ async function main() {
 
 const app = express()
 
-const whitelist = ['https://tnzcreations.com', 'http://localhost:5173']
-const corsOptions = {
-  origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
-      callback(null, true)
-    } else {
-      callback(new Error('Not allowed by CORS'))
-    }
-  },
-  credentials: true,
-}
-
-app.use(cors(corsOptions))
 app.use(compression())
 app.use(helmet())
+app.use(
+  cors({
+    origin: 'https://tnzcreations.com',
+    credentials: true, // Enable sending cookies in the response
+  })
+)
 // Apply rate limiter to all requests
 
 // view engine setup
