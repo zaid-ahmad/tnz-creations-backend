@@ -112,18 +112,6 @@ router.get(
   })
 )
 
-/*
-    ---------------BASIC WORKFLOW---------------
-  User registers -> email verification page -> email verify -> done
-  /register => get email from req.params => verify otp => send jwt token
-  /register ---> /generate-otp ---> /verify-otp (if correct send jwt token)
-
-  NO. of pages for this-
-  1. Register Page
-  2. Generate Token explaining email verification page with send opt button
-  3. Form to enter otp 
-*/
-
 router.get(
   '/user',
   asyncHandler(async (req, res) => {
