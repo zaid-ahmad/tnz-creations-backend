@@ -39,12 +39,12 @@ const app = express()
 app.use(compression())
 app.use(helmet())
 app.use(
-  '*',
   cors({
-    origin: true,
-    credentials: true,
+    origin: 'https://tnzcreations.com',
+    credentials: true, // Enable sending cookies in the response
   })
 )
+// https://tnzcreations.com
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'))
@@ -54,7 +54,7 @@ app.set('view engine', 'pug')
 
 app.use(
   session({
-    secret: 'fsdfsa12dsaf',
+    secret: 'cats',
     resave: false,
     saveUninitialized: true,
   })
