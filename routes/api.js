@@ -206,7 +206,11 @@ router.post('/verify-otp', async (req, res) => {
     user.OTPAttempts = 0
 
     await user.save()
-    res.cookie('token', token, { httpOnly: true, secure: true })
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+    })
     res.sendStatus(200)
   } catch (err) {
     console.log(err)
@@ -346,7 +350,11 @@ router.post(
             const token = jwt.sign({ email: user.email }, jwtSecret, {
               expiresIn: '1d',
             })
-            res.cookie('token', token, { httpOnly: true, secure: true })
+            res.cookie('token', token, {
+              httpOnly: true,
+              secure: true,
+              sameSite: 'none',
+            })
             res.sendStatus(200)
           } else {
             res.status(401).send('Incorrect email/password')
