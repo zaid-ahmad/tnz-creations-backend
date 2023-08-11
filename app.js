@@ -44,7 +44,7 @@ app.use(
     credentials: true, // Enable sending cookies in the response
   })
 )
-// Apply rate limiter to all requests
+// https://tnzcreations.com
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'))
