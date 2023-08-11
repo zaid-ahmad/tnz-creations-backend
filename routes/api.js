@@ -376,7 +376,7 @@ router.post(
 router.post(
   '/logout',
   asyncHandler(async (req, res) => {
-    res.clearCookie('token', { httpOnly: true, secure: true })
+    res.clearCookie('token', { httpOnly: true, secure: true, sameSite: 'none' })
 
     res.sendStatus(200)
   })
