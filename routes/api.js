@@ -346,7 +346,6 @@ router.post(
             const token = jwt.sign({ email: user.email }, jwtSecret, {
               expiresIn: '1d',
             })
-            console.log('hi')
             res.cookie('token', token, { httpOnly: true })
             res.sendStatus(200)
           } else {
