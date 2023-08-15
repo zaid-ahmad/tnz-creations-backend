@@ -27,7 +27,7 @@ This project is a server-side rendered (SSR) application that uses PUG to displa
 ## Image Storage
 This SSR application serves as a panel for the MongoDB database. The images are not stored on a service like AWS or Google Cloud because the budget for the website was not high. Instead, the images are stored in the directory itself using multer.
 
-This has a few caveats. First, if you push new changes to the application, all of the images will be lost. This is because the way the images are displayed in the backend is by simply using the link to the image, such as https://tnzcreationsinventory.up.railway.app/public/images/uploads/<file_name>. When you push new changes, the directory is cleared and the /public/images/uploads directory becomes empty.
+This has a few caveats. First, if you push new changes to the application, all of the images will be lost. This is because the way the images are displayed in the backend is by simply using the link to the image, such as `https://tnzcreationsinventory.up.railway.app/public/images/uploads/<file_name>`. When you push new changes, the directory is cleared and the `/public/images/uploads` directory becomes empty.
 
 In the future, I may change this by storing the images in a service like AWS or Google Cloud. This would prevent the images from being lost when you push new changes.
 
