@@ -4,22 +4,17 @@ block content
 
     a(href="/inventory/products" id="goback") <- Go back
 
-    if (context === 'update')
-        h1 Update Product Info 
-    else
-        h1 Add a Product to the Inventory
+    h1 Update Product Information
 
     .product-form
         form(action="" method="POST" enctype="multipart/form-data")
             .col1
                 .prod-inp.inp
                     label(for="name") Product Name 
-                        span(id='req') *
                     input(id='name' type="text" name="product" placeholder="Product name..." required value=(undefined===product ? '' : product.name))
                 .cat-img-cont
                     .cat-dropdown.inp
                         label(for="category") Select Category
-                            span(id='req') *
                         select(type='select', placeholder='Select Category' name='category' required='true' id="category" )
                             for cat in category
                                 if cat
@@ -38,54 +33,47 @@ block content
                                         p Please make a category first before adding a product
                     .prod-img.inp
                         .img-lbl
-                            label(for="img") Upload images
-                                span(id='req') * 
+                            label(for="img") Replace an image
                         .inp-img
-                            input(type="file", name="images", id='img' multiple=true)
+                            input(type="file", name="image", id='img')
+
+                        .inp-pos
+                            label(for="pos") Which image are you updating? (You can only update 1 image at a time.)
+                            input(type="number" name="position" id="pos" value=1)
 
                 .price-inp.inp
                     label(for="price") Price
-                        span(id='req') *
                     input(id='price' type="number" name="price" placeholder="Enter price..." value=(undefined===product ? '' : product.price) required )
                 .discount-inp.inp
                     label(for="discount") Discount
-                        span(id='req') *
                         span(id='info')  (This data would be needed for the website)
                     .discount
                         input(id='discount' type="text" name="discount" placeholder="5, 10, 20..." required value=(undefined===product ? '' : product.discount))
                         span  %
                 .weight-inp.inp
                     label(for="weight") Weight
-                        span(id='req') *
                         span(id='info')  (in kg)
                     input(id='weight' type="text" name="weight" placeholder="0.230" required value=(undefined===product ? '' : product.weight))
                 .dimensions-inp.inp
                     label(for="dimensions") Dimensions
-                        span(id='req') *
                         span(id='info')  (Please enter the values in cm separated by a space in the order [L W H])
                     input(id='dimensions' type="text" name="dimensions" placeholder="2 4 8" required value=(undefined===product ? '' : product.dimensions.join(" "))) 
 
             .col2
                 .desc-inp.inp
                     label(for="description") Description
-                        span(id='req') *
                     textarea(name="description", cols="30", rows="10" id='description'  placeholder='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.' required) #{undefined===product ? '' : product.description}
 
                 .colors-inp.inp
                     label(for="colors") Colors
-                        span(id='req') *
                         span(id='info')  (Please enter the colors sperated by a space. Example: Red Yellow Green...)
                     input(id='colors' type="text" name="colors" placeholder="Red Yellow Green" required value=(undefined===product ? '' : product.colors.join(" ")))
 
                 .stock-inp.inp
                     label(for="stock") Stock
-                        span(id='req') *
                     input(id='stock' type="text" name="stock" placeholder="120, 500..." required value=(undefined===product ? '' : product.stock))
-            
-                if (context === 'update')
+
                     button(type="submit") Update
-                else
-                    button(type="submit") Add
                 
     if errors
         for err in errors

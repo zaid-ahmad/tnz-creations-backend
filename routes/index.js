@@ -1,8 +1,8 @@
-const express = require('express')
-const router = express.Router()
+const express = require("express");
+const router = express.Router();
 
-router.get('/', function (req, res) {
-  res.redirect('/inventory')
-})
+router.get("/", function (req, res) {
+    res.redirect("/inventory");
+});
 
-module.exports = router
+module.exports = router;

@@ -8,7 +8,7 @@ block content
         .product-container
             .one
                 .prod-det-img 
-                    img(src=`/images/uploads/${images[0]}`, alt=`Image of ${name}`)
+                    img(src=src=`https://tnz-creations-images.s3.ap-south-1.amazonaws.com/${images[0]}`, alt=`Image of ${name}`)
             
             .pdtlcont
                 .two
@@ -36,7 +36,7 @@ block content
                         p Addtional Images 
                         .extra-imgs 
                             each image in images.slice(1)
-                                img(src=`/images/uploads/${image}`, alt="")
+                                img(src=src=`https://tnz-creations-images.s3.ap-south-1.amazonaws.com/${image}`, alt="")
 
                 .three
                     p Additional Information
