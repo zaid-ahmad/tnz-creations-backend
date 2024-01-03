@@ -41,6 +41,14 @@ block content
                             label(for="pos") Which image are you updating? (You can only update 1 image at a time.)
                             input(type="number" name="position" id="pos" value=1)
 
+                
+                .prod-img.inp
+                    .img-lbl
+                        label(for="img") Add more images
+                    .inp-img
+                        input(type="file", name="images", id='img' multiple)
+
+
                 .price-inp.inp
                     label(for="price") Price
                     input(id='price' type="number" name="price" placeholder="Enter price..." value=(undefined===product ? '' : product.price) required )

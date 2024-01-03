@@ -12,7 +12,16 @@ const upload = multer({
 const uploadForUpdate = multer({
     storage: storage,
     limits: { fieldSize: 25 * 1024 * 1024 },
-}).single("image");
+}).fields([
+    {
+        name: "image",
+        maxCount: 1,
+    },
+    {
+        name: "images",
+        maxCount: 4,
+    },
+]);
 
 const category_controller = require("../controllers/category_controller");
 const products_controller = require("../controllers/products_controller");

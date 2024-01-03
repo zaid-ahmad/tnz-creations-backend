@@ -200,7 +200,7 @@ exports.product_create_post = [
     asyncHandler(async (req, res) => {
         const errors = validationResult(req);
 
-        let imageNames = [];
+        const imageNames = [];
 
         await Promise.all(
             req.files.map(async (file) => {
@@ -321,7 +321,7 @@ exports.product_update_post = [
             _id: req.params.id,
         });
 
-        if (req.file) {
+        if (req.files.image) {
             // 1. see the position, delete that from s3
             const position = req.body.position;
             const params = {
@@ -333,7 +333,7 @@ exports.product_update_post = [
 
             await s3.send(command);
             // 2. upload the given image to s3
-            const buffer = await sharp(req.file.buffer)
+            const buffer = await sharp(req.files.image[0].buffer)
                 .resize({ height: 355, width: 355, fit: "fill" })
                 .toBuffer();
             const imageName = randomImageName();
@@ -342,18 +342,44 @@ exports.product_update_post = [
                 Bucket: bucketName,
                 Key: imageName,
                 Body: buffer,
-                ContentType: req.file.mimetype,
+                ContentType: req.files.image[0].mimetype,
             };
             const command2 = new PutObjectCommand(params2);
 
             await s3.send(command2);
             // 3. upload the new name in the specified position in the array
             product.images[position - 1] = imageName;
-        } else {
-            // No new image uploaded, retain the old images
-            product.images = oldProduct.images;
         }
 
+        if (req.files.images) {
+            // 1. Check the length of the images array in db
+            if (oldProduct.images.length < 5) {
+                // 2. If images < 5, then upload to s3 -> append image name to images array in db.
+                const imageNames = [];
+                await Promise.all(
+                    req.files.images.map(async (file) => {
+                        const buffer = await sharp(file.buffer)
+                            .resize({ height: 355, width: 355, fit: "fill" })
+                            .toBuffer();
+                        const imageName = randomImageName();
+
+                        imageNames.push(imageName);
+
+                        const params = {
+                            Bucket: bucketName,
+                            Key: imageName,
+                            Body: buffer,
+                            ContentType: file.mimetype,
+                        };
+                        const command = new PutObjectCommand(params);
+
+                        await s3.send(command);
+                    })
+                );
+
+                product.images = oldProduct.images.concat(imageNames);
+            }
+        }
         if (!errors.isEmpty()) {
             // There are errors. Render form again with sanitized values/error messages.
             const [allCategories] = await Promise.all([Category.find().exec()]);
