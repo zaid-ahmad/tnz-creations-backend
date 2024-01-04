@@ -42,8 +42,6 @@ app.use(
         credentials: true, // Enable sending cookies in the response
     })
 );
-// https://tnzcreations.com
-// http://localhost:5173
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
